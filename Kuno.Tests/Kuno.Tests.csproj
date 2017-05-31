@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461; netstandard1.6</TargetFrameworks>
+    <Version>0.0.1</Version>
+    <Authors>Kuno Contributors</Authors>
+    <Company />
+    <Product>Kuno Framework</Product>
+    <Description>A test library for Kuno that contains scenarios, attributes and other shared features.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">

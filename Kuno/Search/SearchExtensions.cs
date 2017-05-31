@@ -55,7 +55,7 @@ namespace Kuno.Search
 
                 var nextExpression = Expression.Call(updated,
                     containsMethod,
-                    Expression.Constant(text.ToLower()));
+                    Expression.Constant(text.ToLowerInvariant()));
 
                 body = Expression.OrElse(body, nextExpression);
             }

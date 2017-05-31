@@ -170,7 +170,7 @@ namespace Kuno.Services.Inventory
             {
                 return null;
             }
-            if ((bool)method.ReturnType?.GetTypeInfo().IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+            if (method?.ReturnType?.GetTypeInfo().IsGenericType == true && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
             {
                 return method.ReturnType.GetGenericArguments()[0];
             }

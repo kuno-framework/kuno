@@ -19,7 +19,7 @@ namespace Kuno.Domain
     /// <seealso cref="System.IEquatable{T}" />
     public abstract class ValueObject<T> : IEquatable<T> where T : ValueObject<T>
     {
-        private static IList<FieldInfo> _fields = new List<FieldInfo>();
+        private IList<FieldInfo> _fields = new List<FieldInfo>();
 
         /// <inheritdoc />
         public virtual bool Equals(T other)
