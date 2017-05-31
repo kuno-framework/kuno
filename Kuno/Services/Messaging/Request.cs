@@ -1,11 +1,13 @@
 ﻿/* 
- * Copyright (c) Kuno Contributors
+ * Copyright (c) Stacks Contributors
  * 
  * This file is subject to the terms and conditions defined in
  * the LICENSE file, which is part of this source code package.
  */
 
 using System.Security.Claims;
+using Newtonsoft.Json;
+using Kuno.Serialization;
 
 namespace Kuno.Services.Messaging
 {
@@ -24,7 +26,7 @@ namespace Kuno.Services.Messaging
         /// Gets the request message.
         /// </summary>
         /// <value>The request message.</value>
-        public MessageEnvelope Message { get; internal set; }
+        public IMessage Message { get; internal set; }
 
         /// <summary>
         /// Gets the parent context.
@@ -54,6 +56,7 @@ namespace Kuno.Services.Messaging
         /// Gets the user making the request.
         /// </summary>
         /// <value>The user making the request.</value>
+        [JsonConverter(typeof(ClaimsPrincipalConverter))]
         public ClaimsPrincipal User { get; internal set; }
     }
 }

@@ -9,9 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Slalom.Stacks.Services.Inventory;
-using Slalom.Stacks.Services.Logging;
-using Slalom.Stacks.Validation;
+using Kuno.Services.Inventory;
+using Kuno.Services.Logging;
+using Kuno.Validation;
 
 namespace Kuno.Services.Messaging
 {

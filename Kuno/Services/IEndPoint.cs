@@ -1,11 +1,12 @@
-﻿/* 
- * Copyright (c) Kuno Contributors
+/* 
+ * Copyright (c) Stacks Contributors
  * 
  * This file is subject to the terms and conditions defined in
  * the LICENSE file, which is part of this source code package.
  */
 
 using System.Threading.Tasks;
+using Kuno.Services.Messaging;
 
 namespace Kuno.Services
 {
@@ -15,6 +16,18 @@ namespace Kuno.Services
     /// </summary>
     public interface IEndPoint
     {
+        /// <summary>
+        /// Gets or sets the current context.
+        /// </summary>
+        /// <value>The current context.</value>
+        ExecutionContext Context { get; set; }
+
+        /// <summary>
+        /// Gets the current request.
+        /// </summary>
+        /// <value>The current request.</value>
+        Request Request { get; }
+
         /// <summary>
         /// Called when the endpoint is created and started.
         /// </summary>
@@ -26,7 +39,7 @@ namespace Kuno.Services
     /// of the specified type and does not return a value.
     /// </summary>
     /// <typeparam name="TMessage">The type of message that this endpoint can receive.</typeparam>
-    public interface IEndPoint<in TMessage> : IEndPoint
+    public interface IEndPoint<TMessage> : IEndPoint
     {
         /// <summary>
         /// Receives the call to the endpoint.
@@ -41,7 +54,7 @@ namespace Kuno.Services
     /// </summary>
     /// <typeparam name="TRequest">The type of message that this endpoint can receive.</typeparam>
     /// <typeparam name="TResponse">The type of message this endpoint returns.</typeparam>
-    public interface IEndPoint<in TRequest, TResponse> : IEndPoint
+    public interface IEndPoint<TRequest, TResponse> : IEndPoint
     {
         /// <summary>
         /// Receives the call to the endpoint.

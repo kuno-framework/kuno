@@ -8,10 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using Newtonsoft.Json;
 using Kuno.Serialization;
 using Kuno.Validation;
-using Newtonsoft.Json;
 
 namespace Kuno.Services.Messaging
 {
@@ -63,8 +62,8 @@ namespace Kuno.Services.Messaging
         /// <value>The message response.</value>
         public new T Response
         {
-            get => (T)base.Response;
-            set => base.Response = value;
+            get { return (T)base.Response; }
+            set { base.Response = value; }
         }
     }
 
