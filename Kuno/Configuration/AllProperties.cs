@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) Stacks Contributors
+ * Copyright (c) Kuno Contributors
  * 
  * This file is subject to the terms and conditions defined in
  * the LICENSE file, which is part of this source code package.
@@ -11,10 +11,10 @@ using Autofac.Core;
 namespace Kuno.Configuration
 {
     /// <summary>
-    /// Used to select all properties.
+    /// Used to select all properties when building an Autofac container.
     /// </summary>
     /// <seealso cref="Autofac.Core.IPropertySelector" />
-    public class AllProperties : IPropertySelector
+    internal class AllProperties : IPropertySelector
     {
         /// <summary>
         /// The shared instance of the selector.

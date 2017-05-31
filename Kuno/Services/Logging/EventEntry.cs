@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2017 Stacks Contributors
+ * Copyright 2017 Kuno Contributors
  * 
  * This file is subject to the terms and conditions defined in
  * file 'LICENSE.txt', which is part of this source code package.

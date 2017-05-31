@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kuno", "Kuno\Kuno.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kuno.Tests", "Kuno.Tests\Kuno.Tests.csproj", "{488EBEE6-A900-4572-B340-0075CD9C9156}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{146F9ACD-C1D0-4C72-B94D-06A30C5F313E}"
+	ProjectSection(SolutionItems) = preProject
+		assets\package.ps1 = assets\package.ps1
+		assets\sonar-build.ps1 = assets\sonar-build.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
