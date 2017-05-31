@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Kuno.Services.Messaging;
 using Xunit;
 
 namespace Kuno.Tests.MessageEnvelopes

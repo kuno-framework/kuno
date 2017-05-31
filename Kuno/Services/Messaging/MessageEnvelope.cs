@@ -1,20 +1,19 @@
 ﻿/* 
- * Copyright (c) Stacks Contributors
+ * Copyright (c) Kuno Contributors
  * 
  * This file is subject to the terms and conditions defined in
  * the LICENSE file, which is part of this source code package.
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-// ReSharper disable NonReadonlyMemberInGetHashCode
-
-namespace Kuno
+namespace Kuno.Services.Messaging
 {
     /// <summary>
     /// An atomic packet of data that is transmitted through a messaging channel.
     /// </summary>
-    internal class MessageEnvelope : IEquatable<MessageEnvelope>
+    public class MessageEnvelope : IEquatable<MessageEnvelope>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageEnvelope" /> class.
@@ -83,6 +82,7 @@ namespace Kuno
         }
 
         /// <inheritdoc />
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
         {
             return (this.Id != null ? this.Id.GetHashCode() : 0);
