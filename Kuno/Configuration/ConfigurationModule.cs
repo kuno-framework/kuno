@@ -52,14 +52,14 @@ namespace Kuno.Configuration
                        var configurationBuilder = new ConfigurationBuilder();
                        configurationBuilder.SetBasePath(currentDirectory);
                        configurationBuilder.AddJsonFile("appsettings.json", true, true);
-                       configurationBuilder.AddJsonFile("stacks.json", true, true);
-                       foreach (var path in Directory.GetFiles(currentDirectory, "stacks.*.json"))
+                       configurationBuilder.AddJsonFile("kuno.json", true, true);
+                       foreach (var path in Directory.GetFiles(currentDirectory, "kuno.*.json"))
                        {
                            configurationBuilder.AddJsonFile(Path.GetFileName(path), true, true);
                        }
                        if (Directory.Exists(Path.Combine(currentDirectory, "config")))
                        {
-                           foreach (var path in Directory.GetFiles(currentDirectory, "config\\stacks**.json"))
+                           foreach (var path in Directory.GetFiles(currentDirectory, "config\\kuno**.json"))
                            {
                                configurationBuilder.AddJsonFile("config\\" + Path.GetFileName(path), true, true);
                            }
@@ -75,10 +75,10 @@ namespace Kuno.Configuration
                    .OnActivated(c =>
                    {
                        var configuration = c.Context.Resolve<IConfiguration>();
-                       configuration.GetSection("Stacks")?.Bind(c.Instance);
+                       configuration.GetSection("Kuno")?.Bind(c.Instance);
                        configuration.GetReloadToken().RegisterChangeCallback(_ =>
                        {
-                           configuration.GetSection("Stacks")?.Bind(c.Instance);
+                           configuration.GetSection("Kuno")?.Bind(c.Instance);
                        }, configuration);
                    });
 

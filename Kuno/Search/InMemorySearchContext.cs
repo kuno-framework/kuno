@@ -171,9 +171,9 @@ namespace Kuno.Search
         /// </remarks>
         public async Task UpdateAsync<TSearchResult>(TSearchResult[] instances) where TSearchResult : class, ISearchResult
         {
-            await this.RemoveAsync(instances);
+            await this.RemoveAsync(instances).ConfigureAwait(false);
 
-            await this.AddAsync(instances);
+            await this.AddAsync(instances).ConfigureAwait(false);
         }
 
         /// <summary>

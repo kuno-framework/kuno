@@ -15,7 +15,7 @@ namespace Kuno.Services.Logging
 {
     internal class NullEventStore : IEventStore
     {
-        public Task<IEnumerable<EventEntry>> GetEvents(DateTimeOffset? start, DateTimeOffset? end)
+        public Task<IEnumerable<EventEntry>> GetEvents(DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             return Task.FromResult(new EventEntry[0].AsEnumerable());
         }

@@ -43,12 +43,12 @@ namespace Kuno.Services.Pipeline
                 var raisedEvents = context.RaisedEvents.Union(new[] {context.Response as EventMessage}).Where(e => e != null).ToArray();
                 foreach (var instance in raisedEvents)
                 {
-                    await _eventStore.Append(instance);
+                    await _eventStore.Append(instance).ConfigureAwait(false);
 
-                    await _messageGateway.Publish(instance, context);
+                    await _messageGateway.Publish(instance, context).ConfigureAwait(false);
                 }
 
-                await Task.WhenAll(_eventPublishers.Select(e => e.Publish(raisedEvents)));
+                await Task.WhenAll(_eventPublishers.Select(e => e.Publish(raisedEvents))).ConfigureAwait(false);
             }
         }
     }

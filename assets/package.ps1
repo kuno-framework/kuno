@@ -4,7 +4,7 @@
 #>
 param (
     $Configuration = "DEBUG",
-    $Packages = @("Kuno")
+    $Packages = @("Kuno", "Kuno.Tests")
 )
 
 function Clear-LocalCache() {

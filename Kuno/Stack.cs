@@ -6,15 +6,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Kuno.Configuration;
-using Kuno.Services.Messaging;
-using Microsoft.Extensions.Configuration;
-using Kuno.Configuration;
 using Kuno.Domain;
 using Kuno.Logging;
 using Kuno.Reflection;
 using Kuno.Search;
 using Kuno.Services.Logging;
 using Kuno.Services.Messaging;
+using Microsoft.Extensions.Configuration;
 using Module = Autofac.Module;
 #if core
 using Microsoft.Extensions.DependencyModel;
@@ -102,6 +100,39 @@ namespace Kuno
         /// <value>The configured <see cref="ISearchFacade" />.</value>
         public ISearchFacade Search => this.Container.Resolve<ISearchFacade>();
 
+#if !core
+        private IEnumerable<Assembly> GetAssemblies()
+        {
+            var current = Assembly.GetEntryAssembly();
+            if (current != null)
+            {
+                yield return current;
+                foreach (var assembly in Directory.GetFiles(Path.GetDirectoryName(current.Location), current.GetName().Name.Split('.')[0] + "*.dll"))
+                {
+                    yield return Assembly.LoadFrom(assembly);
+                }
+            }
+        }
+#endif
+
+#if core
+        private IEnumerable<Assembly> GetAssemblies()
+        {
+            var dependencies = DependencyContext.Default;
+            foreach (var compilationLibrary in dependencies.RuntimeLibraries)
+            {
+                if (DiscoveryService.Ignores.Any(e => compilationLibrary.Name.StartsWith(e)))
+                {
+                    continue;
+                }
+
+                var assemblyName = new AssemblyName(compilationLibrary.Name);
+
+                yield return Assembly.Load(assemblyName);
+            }
+        }
+#endif
+
         /// <summary>
         /// Includes or registers additional assemblies identified by the specified markers.
         /// </summary>
@@ -110,39 +141,8 @@ namespace Kuno
         {
             if (!markers?.Any() ?? true)
             {
-                var list = new List<Assembly>();
-#if !core
-                var current = Assembly.GetEntryAssembly();
-                if (current != null)
-                {
-                    list.Add(current);
-                    foreach (var assembly in Directory.GetFiles(Path.GetDirectoryName(current.Location), current.GetName().Name.Split('.')[0] + "*.dll"))
-                    {
-                        list.Add(Assembly.LoadFrom(assembly));
-                    }
-                }
-#else
-                var dependencies = DependencyContext.Default;
-                foreach (var compilationLibrary in dependencies.RuntimeLibraries)
-                {
-                    try
-                    {
-                        if (DiscoveryService.Ignores.Any(e => compilationLibrary.Name.StartsWith(e)))
-                        {
-                            continue;
-                        }
+                var list = new List<Assembly>(this.GetAssemblies());
 
-                        var assemblyName = new AssemblyName(compilationLibrary.Name);
-
-                        var assembly = Assembly.Load(assemblyName);
-
-                        list.Add(assembly);
-                    }
-                    catch
-                    {
-                    }
-                }
-#endif
                 foreach (var source in list.Distinct().Except(this.Assemblies))
                 {
                     this.Assemblies.Add(source);
@@ -211,7 +211,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public async Task<MessageResult<T>> Send<T>(string path, TimeSpan? timeout = null)
         {
-            var result = await this.Container.Resolve<IMessageGateway>().Send(path, timeout: timeout);
+            var result = await this.Container.Resolve<IMessageGateway>().Send(path, timeout: timeout).ConfigureAwait(false);
 
             return new MessageResult<T>(result);
         }
@@ -224,7 +224,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public async Task<MessageResult<T>> Send<T>(object message, TimeSpan? timeout = null)
         {
-            var result = await this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout);
+            var result = await this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout).ConfigureAwait(false);
 
             return new MessageResult<T>(result);
         }

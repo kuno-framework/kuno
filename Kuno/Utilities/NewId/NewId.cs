@@ -288,7 +288,7 @@ namespace Kuno.Utilities.NewId
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            if (obj.GetType() != typeof(NewId))
+            if (!(obj is NewId))
                 return false;
             return this.Equals((NewId)obj);
         }

@@ -115,9 +115,9 @@ namespace Kuno.Caching
         {
             Argument.NotNull(instances, nameof(instances));
 
-            await this.RemoveAsync(instances);
+            await this.RemoveAsync(instances).ConfigureAwait(false);
 
-            await this.AddAsync(instances);
+            await this.AddAsync(instances).ConfigureAwait(false);
         }
 
         /// <summary>

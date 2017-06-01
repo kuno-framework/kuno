@@ -39,7 +39,7 @@ namespace Kuno.Services.Logging
             _environment = environment;
         }
 
-        public Task<IEnumerable<EventEntry>> GetEvents(DateTimeOffset? start, DateTimeOffset? end)
+        public Task<IEnumerable<EventEntry>> GetEvents(DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             CacheLock.EnterReadLock();
             try

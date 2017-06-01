@@ -41,14 +41,14 @@ namespace Kuno.Services.EndPoints
             }
 
             var externalDocs = new ExternalDocs();
-            _configuration.GetSection("stacks:externalDocs").Bind(externalDocs);
+            _configuration.GetSection("kuno:externalDocs").Bind(externalDocs);
             if (!String.IsNullOrWhiteSpace(externalDocs.Url))
             {
                 document.ExternalDocs = externalDocs;
             }
 
             var tags = new List<Tag>();
-            _configuration.GetSection("stacks:tags").Bind(tags);
+            _configuration.GetSection("kuno:tags").Bind(tags);
             if (tags.Any())
             {
                 document.Tags.AddRange(tags);

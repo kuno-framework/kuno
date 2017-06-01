@@ -13,7 +13,7 @@ namespace Kuno.Search
     /// Reads data elements from the domain so that they can be indexed.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity to read.</typeparam>
-    public interface IEntityReader<TEntity>
+    public interface IEntityReader<out TEntity>
     {
         /// <summary>
         /// Reads elements so that they can be indexed.

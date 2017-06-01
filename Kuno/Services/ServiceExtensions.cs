@@ -11,7 +11,7 @@ using Kuno.Services.Inventory;
 namespace Kuno.Services
 {
     /// <summary>
-    /// EndPoint extention methods for Stacks.
+    /// EndPoint extention methods for Kuno.
     /// </summary>
     public static class ServiceExtensions
     {

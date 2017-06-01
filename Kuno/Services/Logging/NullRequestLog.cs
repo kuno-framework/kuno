@@ -19,7 +19,7 @@ namespace Kuno.Services.Logging
             return Task.FromResult(0);
         }
 
-        public Task<IEnumerable<RequestEntry>> GetEntries(DateTimeOffset? start, DateTimeOffset? end)
+        public Task<IEnumerable<RequestEntry>> GetEntries(DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             throw new NotImplementedException();
         }

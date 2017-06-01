@@ -49,36 +49,33 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public virtual async Task Publish(EventMessage instance, ExecutionContext context)
+        public virtual async Task Publish(EventMessage instance, ExecutionContext context = null)
         {
             Argument.NotNull(instance, nameof(instance));
 
-            var request = _requestContext.Value.Resolve(instance, context.Request);
-            await this.LogRequest(request);
+            var request = _requestContext.Value.Resolve(instance, context?.Request);
+            await this.LogRequest(request).ConfigureAwait(false);
 
             var endPoints = _services.Value.Find(instance);
             foreach (var endPoint in endPoints)
             {
                 if (endPoint.InvokeMethod.GetParameters().FirstOrDefault()?.ParameterType == instance.MessageType)
                 {
-                    await _dispatcher.Value.Route(request, endPoint, context);
+                    await _dispatcher.Value.Route(request, endPoint, context).ConfigureAwait(false);
                 }
                 else
                 {
                     var attribute = endPoint.EndPointType.GetAllAttributes<SubscribeAttribute>().FirstOrDefault();
-                    if (attribute != null)
+                    if (attribute != null && attribute.Channel == instance.Name)
                     {
-                        if (attribute.Channel == instance.Name)
-                        {
-                            await _dispatcher.Value.Route(request, endPoint, context);
-                        }
+                        await _dispatcher.Value.Route(request, endPoint, context).ConfigureAwait(false);
                     }
                 }
             }
 
             foreach (var publisher in _publishers.Value)
             {
-                await publisher.Publish(instance);
+                await publisher.Publish(instance).ConfigureAwait(false);
             }
         }
 
@@ -89,7 +86,7 @@ namespace Kuno.Services.Messaging
 
             foreach (var item in instances)
             {
-                await this.Publish(item, context);
+                await this.Publish(item, context).ConfigureAwait(false);
             }
         }
 
@@ -161,17 +158,17 @@ namespace Kuno.Services.Messaging
             if (endPoint != null)
             {
                 var request = _requestContext.Value.Resolve(instance, endPoint, parentContext?.Request);
-                await this.LogRequest(request);
-                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout);
+                await this.LogRequest(request).ConfigureAwait(false);
+                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout).ConfigureAwait(false);
             }
             else
             {
                 var request = _requestContext.Value.Resolve(path, instance, parentContext?.Request);
-                await this.LogRequest(request);
+                await this.LogRequest(request).ConfigureAwait(false);
                 var dispatcher = _dispatchers.Value.FirstOrDefault(e => e.CanRoute(request));
                 if (dispatcher != null)
                 {
-                    return await dispatcher.Route(request, parentContext, timeout);
+                    return await dispatcher.Route(request, parentContext, timeout).ConfigureAwait(false);
                 }
             }
 
@@ -188,17 +185,17 @@ namespace Kuno.Services.Messaging
             if (endPoint != null)
             {
                 var request = _requestContext.Value.Resolve(command, endPoint, parentContext?.Request);
-                await this.LogRequest(request);
-                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout);
+                await this.LogRequest(request).ConfigureAwait(false);
+                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout).ConfigureAwait(false);
             }
             else
             {
                 var request = _requestContext.Value.Resolve(path, command, parentContext?.Request);
-                await this.LogRequest(request);
+                await this.LogRequest(request).ConfigureAwait(false);
                 var dispatcher = _dispatchers.Value.FirstOrDefault(e => e.CanRoute(request));
                 if (dispatcher != null)
                 {
-                    return await dispatcher.Route(request, parentContext, timeout);
+                    return await dispatcher.Route(request, parentContext, timeout).ConfigureAwait(false);
                 }
             }
 
@@ -212,7 +209,7 @@ namespace Kuno.Services.Messaging
         {
             if (request.Path?.StartsWith("_") == false)
             {
-                await _requests.Value.Append(request);
+                await _requests.Value.Append(request).ConfigureAwait(false);
             }
         }
     }

@@ -61,8 +61,8 @@ namespace Kuno.Domain
                 throw new InvalidOperationException($"No repository has been registered for type {typeof(TAggregateRoot)}.");
             }
 
-            await repository.Add(instances);
-            await _cacheManager.AddAsync(instances);
+            await repository.Add(instances).ConfigureAwait(false); 
+            await _cacheManager.AddAsync(instances).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -87,9 +87,9 @@ namespace Kuno.Domain
                 throw new InvalidOperationException($"No repository has been registered for type {typeof(TAggregateRoot)}.");
             }
 
-            await repository.Clear();
+            await repository.Clear().ConfigureAwait(false);
 
-            await _cacheManager.ClearAsync();
+            await _cacheManager.ClearAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -108,7 +108,7 @@ namespace Kuno.Domain
         /// <inheritdoc />
         public async Task<TAggregateRoot> Find<TAggregateRoot>(string id) where TAggregateRoot : IAggregateRoot
         {
-            var target = await _cacheManager.FindAsync<TAggregateRoot>(id);
+            var target = await _cacheManager.FindAsync<TAggregateRoot>(id).ConfigureAwait(false);
             if (target != null)
             {
                 return target;
@@ -121,11 +121,11 @@ namespace Kuno.Domain
                 throw new InvalidOperationException($"No repository has been registered for type {typeof(TAggregateRoot)}.");
             }
 
-            target = await repository.Find(id);
+            target = await repository.Find(id).ConfigureAwait(false);
 
             if (target != null)
             {
-                await _cacheManager.AddAsync(target);
+                await _cacheManager.AddAsync(target).ConfigureAwait(false);
             }
 
             return target;
@@ -177,9 +177,9 @@ namespace Kuno.Domain
                 throw new InvalidOperationException($"No repository has been registered for type {typeof(TAggregateRoot)}.");
             }
 
-            await repository.Remove(instances);
+            await repository.Remove(instances).ConfigureAwait(false);
 
-            await _cacheManager.RemoveAsync(instances);
+            await _cacheManager.RemoveAsync(instances).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -214,9 +214,9 @@ namespace Kuno.Domain
                 throw new InvalidOperationException($"No repository has been registered for type {typeof(TAggregateRoot)}.");
             }
 
-            await repository.Update(instances);
+            await repository.Update(instances).ConfigureAwait(false);
 
-            await _cacheManager.UpdateAsync(instances);
+            await _cacheManager.UpdateAsync(instances).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

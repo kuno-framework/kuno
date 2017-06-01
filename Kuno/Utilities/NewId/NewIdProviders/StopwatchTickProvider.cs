@@ -7,7 +7,7 @@ namespace Kuno.Utilities.NewId.NewIdProviders
         ITickProvider
     {
         readonly Stopwatch _stopwatch;
-        DateTime _start;
+        readonly DateTime _start;
 
         public StopwatchTickProvider()
         {

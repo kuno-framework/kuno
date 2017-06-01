@@ -71,7 +71,7 @@ namespace Kuno
                 {
                     var accessors = propertyInfo.GetAccessors(true);
                     if ((accessors.Length != 1 ||
-                         !(accessors[0].ReturnType != typeof(void))) &&
+                         accessors[0].ReturnType == typeof(void)) &&
                         (overrideSetValues || accessors.Length != 2 ||
                          propertyInfo.GetValue(instance, null) == null))
                     {
@@ -107,7 +107,7 @@ namespace Kuno
             Argument.NotNull(instance, nameof(instance));
             Argument.NotNull(type, nameof(type));
 
-            var target = ((IEnumerable<object>) instance.Resolve(typeof(IEnumerable<>).MakeGenericType(type))).ToList();
+            var target = ((IEnumerable<object>)instance.Resolve(typeof(IEnumerable<>).MakeGenericType(type))).ToList();
 
             foreach (var item in target)
             {

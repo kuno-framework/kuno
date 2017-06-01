@@ -63,9 +63,9 @@ namespace Kuno.Services.Messaging
                 body = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(body ?? ""), parameterType);
             }
 
-            await (Task)endPoint.InvokeMethod.Invoke(handler, new[] { body });
+            await ((Task)endPoint.InvokeMethod.Invoke(handler, new[] { body })).ConfigureAwait(false);
 
-            await this.Complete(context);
+            await this.Complete(context).ConfigureAwait(false);
 
             return new MessageResult(context);
         }
@@ -86,7 +86,7 @@ namespace Kuno.Services.Messaging
             };
             foreach (var step in steps)
             {
-                await step.Execute(context);
+                await step.Execute(context).ConfigureAwait(false);
             }
         }
     }

@@ -71,7 +71,7 @@ namespace Kuno.Domain
         /// <inheritdoc />
         public async Task<bool> Exists<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class, IAggregateRoot
         {
-            var current = await this.Find(expression);
+            var current = await this.Find(expression).ConfigureAwait(false);
 
             return current.Any();
         }
@@ -143,15 +143,15 @@ namespace Kuno.Domain
         /// <inheritdoc />
         public async Task Update<TEntity>(TEntity[] instances) where TEntity : class, IAggregateRoot
         {
-            await this.Remove(instances);
+            await this.Remove(instances).ConfigureAwait(false);
 
-            await this.Add(instances);
+            await this.Add(instances).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public async Task<bool> Exists<TEntity>(string id) where TEntity : class, IAggregateRoot
         {
-            var target = await this.Find<TEntity>(id);
+            var target = await this.Find<TEntity>(id).ConfigureAwait(false);
 
             return target != null;
         }

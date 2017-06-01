@@ -20,15 +20,12 @@ namespace Kuno.Services.Inventory
         public EndPointPath(string value)
         {
             this.Value = this.Path = value?.Trim().Trim('/');
-            if (!String.IsNullOrWhiteSpace(this.Value))
+            if (!String.IsNullOrWhiteSpace(this.Value) && Regex.IsMatch(value))
             {
-                if (Regex.IsMatch(value))
-                {
-                    var match = Regex.Match(this.Value);
-                    this.Version = Convert.ToInt32(match.Groups[2].Value);
-                    this.Path = match.Groups[3].Value;
-                    this.IsVersioned = true;
-                }
+                var match = Regex.Match(this.Value);
+                this.Version = Convert.ToInt32(match.Groups[2].Value);
+                this.Path = match.Groups[3].Value;
+                this.IsVersioned = true;
             }
         }
 

@@ -43,7 +43,7 @@ namespace Kuno.Services.Logging
             return Task.FromResult(0);
         }
 
-        public Task<IEnumerable<ResponseEntry>> GetEntries(DateTimeOffset? start, DateTimeOffset? end)
+        public Task<IEnumerable<ResponseEntry>> GetEntries(DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             CacheLock.EnterReadLock();
             try

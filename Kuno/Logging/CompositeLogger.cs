@@ -213,7 +213,7 @@ namespace Kuno.Logging
 
         private IEnumerable<ILogger> GetLoggers()
         {
-            return _components.ResolveAll<ILogger>().ToList().Where(e => e != this);
+            return _components.ResolveAll<ILogger>().Where(e => e != this);
         }
     }
 }

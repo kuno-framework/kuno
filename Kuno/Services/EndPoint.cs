@@ -93,7 +93,7 @@ namespace Kuno.Services
         /// <returns>A task for asynchronous programming.</returns>
         public async Task<MessageResult<T>> Send<T>(object message)
         {
-            var result = await this.Send(message);
+            var result = await this.Send(message).ConfigureAwait(false);
 
             return new MessageResult<T>(result);
         }
@@ -107,7 +107,7 @@ namespace Kuno.Services
     {
         async Task IEndPoint<object>.Receive(object instance)
         {
-            await this.Components.Resolve<ValidateMessage>().Execute(this.Context);
+            await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
             if (!this.Context.ValidationErrors.Any())
             {
@@ -115,7 +115,7 @@ namespace Kuno.Services
                 {
                     if (!this.Context.CancellationToken.IsCancellationRequested)
                     {
-                        await this.ReceiveAsync();
+                        await this.ReceiveAsync().ConfigureAwait(false);
                     }
                 }
                 catch (Exception exception)
@@ -160,7 +160,7 @@ namespace Kuno.Services
     {
         async Task IEndPoint<TMessage>.Receive(TMessage instance)
         {
-            await this.Components.Resolve<ValidateMessage>().Execute(this.Context);
+            await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
             if (!this.Context.ValidationErrors.Any())
             {
@@ -168,7 +168,7 @@ namespace Kuno.Services
                 {
                     if (!this.Context.CancellationToken.IsCancellationRequested)
                     {
-                        await this.ReceiveAsync(instance);
+                        await this.ReceiveAsync(instance).ConfigureAwait(false);
                     }
                 }
                 catch (Exception exception)
@@ -205,7 +205,7 @@ namespace Kuno.Services
     {
         async Task<TResponse> IEndPoint<TMessage, TResponse>.Receive(TMessage instance)
         {
-            await this.Components.Resolve<ValidateMessage>().Execute(this.Context);
+            await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
             var result = default(TResponse);
             if (!this.Context.ValidationErrors.Any())
@@ -214,7 +214,7 @@ namespace Kuno.Services
                 {
                     if (!this.Context.CancellationToken.IsCancellationRequested)
                     {
-                        result = await this.ReceiveAsync(instance);
+                        result = await this.ReceiveAsync(instance).ConfigureAwait(false);
 
                         this.Context.Response = result;
 

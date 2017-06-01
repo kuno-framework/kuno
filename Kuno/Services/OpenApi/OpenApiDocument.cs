@@ -105,7 +105,7 @@ namespace Kuno.Services.OpenApi
         /// <value>
         /// The list of tags used by the specification with additional metadata.
         /// </value>
-        public List<Tag> Tags { get; set; } = new List<Tag> { new Tag { Name = "Stacks", Description = "System defined endpoints." } };
+        public List<Tag> Tags { get; set; } = new List<Tag> { new Tag { Name = "Kuno", Description = "System defined endpoints." } };
 
         /// <summary>
         /// Loads the document using hte specified service inventory.
@@ -323,7 +323,7 @@ namespace Kuno.Services.OpenApi
 
             if (endPoint.Path.StartsWith("_") || endPoint.IsVersioned && endPoint.Path.Split('/').ElementAt(1)?.StartsWith("_") == true)
             {
-                yield return "Stacks";
+                yield return "System";
                 yield break;
             }
 

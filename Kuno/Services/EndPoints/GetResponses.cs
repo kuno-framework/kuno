@@ -39,7 +39,7 @@ namespace Kuno.Services.EndPoints
         /// <returns>Returns the response to the request.</returns>
         public override async Task<IEnumerable<ResponseEntry>> ReceiveAsync(GetResponsesRequest instance)
         {
-            var result = await _source.GetEntries(instance.Start, instance.End);
+            var result = await _source.GetEntries(instance.Start, instance.End).ConfigureAwait(false);
 
             return result.Where(e => e.Path == null || !e.Path.StartsWith("_") || e.ValidationErrors != null);
         }
