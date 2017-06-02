@@ -7,6 +7,9 @@
     <Company />
     <Product>Kuno Framework</Product>
     <Description>A test library for Kuno that contains attributes, scenarios and other shared features.</Description>
+    <PackageProjectUrl>http://docs.kuno.io/</PackageProjectUrl>
+    <PackageIconUrl>http://docs.kuno.io/assets/icons/android-icon-36x36.png</PackageIconUrl>
+    <PackageTags>kuno;test;</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">

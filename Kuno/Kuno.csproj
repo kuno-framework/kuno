@@ -9,6 +9,9 @@
     <Company />
     <Product>Kuno Framework</Product>
     <Description>A flexible .NET microservice framework for agile teams.</Description>
+    <PackageIconUrl>http://docs.kuno.io/assets/icons/android-icon-36x36.png</PackageIconUrl>
+    <PackageProjectUrl>http://docs.kuno.io/</PackageProjectUrl>
+    <PackageTags>kuno;</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
