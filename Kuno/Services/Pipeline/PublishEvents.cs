@@ -22,7 +22,6 @@ namespace Kuno.Services.Pipeline
     {
         private readonly IEventStore _eventStore;
         private readonly IMessageGateway _messageGateway;
-        private readonly IEnumerable<IEventPublisher> _eventPublishers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PublishEvents" /> class.
@@ -32,7 +31,6 @@ namespace Kuno.Services.Pipeline
         {
             _messageGateway = components.Resolve<IMessageGateway>();
             _eventStore = components.Resolve<IEventStore>();
-            _eventPublishers = components.ResolveAll<IEventPublisher>();
         }
 
         /// <inheritdoc />
@@ -47,8 +45,6 @@ namespace Kuno.Services.Pipeline
 
                     await _messageGateway.Publish(instance, context).ConfigureAwait(false);
                 }
-
-                await Task.WhenAll(_eventPublishers.Select(e => e.Publish(raisedEvents))).ConfigureAwait(false);
             }
         }
     }
