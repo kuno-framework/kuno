@@ -50,7 +50,7 @@ namespace Kuno.Services.Messaging
             var context = new ExecutionContext(request, endPoint, source.Token, parentContext);
 
             var handler = _components.Resolve(endPoint.EndPointType);
-            var service = handler as IEndPoint;
+            var service = handler as IService;
             if (service != null)
             {
                 service.Context = context;

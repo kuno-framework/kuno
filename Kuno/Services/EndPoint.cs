@@ -19,9 +19,9 @@ using Kuno.Services.Pipeline;
 namespace Kuno.Services
 {
     /// <summary>
-    /// An endpoint is a single unit of solution logic that can be accessed in-process or out-of-process.
+    /// A service is a single unit of solution logic that represents a single business capability.
     /// </summary>
-    public abstract class BaseEndPoint : IEndPoint
+    public abstract class BaseService : IService
     {
         /// <summary>
         /// Gets the configured <see cref="IDomainFacade" />.
@@ -39,7 +39,7 @@ namespace Kuno.Services
         /// Gets the current context.
         /// </summary>
         /// <value>The current context.</value>
-        protected internal ExecutionContext Context => ((IEndPoint) this).Context;
+        protected internal ExecutionContext Context => ((IService) this).Context;
 
         /// <summary>
         /// Gets the configured <see cref="IComponentContext" /> instance.
@@ -47,7 +47,7 @@ namespace Kuno.Services
         /// <value>The configured <see cref="IComponentContext" /> instance.</value>
         internal IComponentContext Components { get; set; }
 
-        ExecutionContext IEndPoint.Context { get; set; }
+        ExecutionContext IService.Context { get; set; }
 
         /// <summary>
         /// Gets the current request.
@@ -100,12 +100,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// An endpoint is a single unit of solution logic that can be accessed in-process or out-of-process.  This endpoint type does not receive message data and does
+    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type does not receive message data and does
     /// not return a value.
     /// </summary>
-    public abstract class EndPoint : BaseEndPoint, IEndPoint<object>
+    public abstract class Service : BaseService, IService<object>
     {
-        async Task IEndPoint<object>.Receive(object instance)
+        async Task IService<object>.Receive(object instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
@@ -153,12 +153,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// An endpoint is a single unit of solution logic that can be accessed in-process or out-of-process.  This endpoint type takes in a message
+    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
     /// of the specified type and does not return a value.
     /// </summary>
-    public abstract class EndPoint<TMessage> : BaseEndPoint, IEndPoint<TMessage>
+    public abstract class Service<TMessage> : BaseService, IService<TMessage>
     {
-        async Task IEndPoint<TMessage>.Receive(TMessage instance)
+        async Task IService<TMessage>.Receive(TMessage instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
@@ -198,12 +198,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// An endpoint is a single unit of solution logic that can be accessed in-process or out-of-process.  This endpoint type takes in a message
+    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
     /// of the specified type and returns a value of the specified type.
     /// </summary>
-    public abstract class EndPoint<TMessage, TResponse> : BaseEndPoint, IEndPoint<TMessage, TResponse>
+    public abstract class Service<TMessage, TResponse> : BaseService, IService<TMessage, TResponse>
     {
-        async Task<TResponse> IEndPoint<TMessage, TResponse>.Receive(TMessage instance)
+        async Task<TResponse> IService<TMessage, TResponse>.Receive(TMessage instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 

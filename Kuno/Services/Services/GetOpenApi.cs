@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 using Kuno.Services.Inventory;
 using Kuno.Services.OpenApi;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Gets the [OpenAPI](https://www.openapis.org/) definition for the API.
     /// </summary>
     [EndPoint("_system/api", Method = "GET", Name = "Get OpenAPI Definition", Public = false)]
-    public class GetOpenApi : EndPoint<GetOpenApiRequest, OpenApiDocument>
+    public class GetOpenApi : Service<GetOpenApiRequest, OpenApiDocument>
     {
         private readonly ServiceInventory _services;
         private readonly IConfiguration _configuration;

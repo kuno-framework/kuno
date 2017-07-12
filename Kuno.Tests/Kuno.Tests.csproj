@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461; netstandard1.6</TargetFrameworks>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
     <Authors>Kuno Contributors</Authors>
     <Company />
     <Product>Kuno Framework</Product>

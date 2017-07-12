@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 using Kuno.Services.Logging;
 using Kuno.Validation;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Gets requests that have been executed in the application context.
     /// </summary>
     [EndPoint("_system/requests", Method = "GET")]
-    public class GetRequests : EndPoint<GetRequestsRequest, IEnumerable<RequestEntry>>
+    public class GetRequests : Service<GetRequestsRequest, IEnumerable<RequestEntry>>
     {
         private readonly IRequestLog _source;
 

@@ -125,7 +125,7 @@ namespace Kuno.Services.Inventory
         /// <returns>Returns endpoint metadata for the specified service.</returns>
         public static IEnumerable<EndPointMetaData> Create(Type service)
         {
-            var interfaces = service.GetInterfaces().Where(e => e.GetTypeInfo().IsGenericType && (e.GetGenericTypeDefinition() == typeof(IEndPoint<>) || e.GetGenericTypeDefinition() == typeof(IEndPoint<,>))).ToList();
+            var interfaces = service.GetInterfaces().Where(e => e.GetTypeInfo().IsGenericType && (e.GetGenericTypeDefinition() == typeof(IService<>) || e.GetGenericTypeDefinition() == typeof(IService<,>))).ToList();
             if (interfaces.Any())
             {
                 var path = service.GetPath();

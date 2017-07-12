@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Request to get the events that have been raised within the application context.

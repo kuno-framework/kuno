@@ -97,11 +97,11 @@ namespace Kuno.Services.Modules
                 .AllPropertiesAutowired();
 
             builder.RegisterAssemblyTypes(assemblies)
-                .Where(e => e.GetInterfaces().Any(x => x == typeof(IEndPoint)))
+                .Where(e => e.GetInterfaces().Any(x => x == typeof(IService)))
                 .AsBaseAndContractTypes()
                 .AsSelf()
                 .AllPropertiesAutowired()
-                .OnActivated(e => { ((IEndPoint)e.Instance).OnStart(); });
+                .OnActivated(e => { ((IService)e.Instance).OnStart(); });
 
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(e => e.GetInterfaces().Contains(typeof(IEventPublisher)))

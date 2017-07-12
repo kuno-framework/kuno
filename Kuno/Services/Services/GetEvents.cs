@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 using Kuno.Services.Logging;
 using Kuno.Validation;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Gets the events that have occurred within the application context.
     /// </summary>
     [EndPoint("_system/events", Method = "GET")]
-    public class GetEvents : EndPoint<GetEventsRequest, IEnumerable<EventEntry>>
+    public class GetEvents : Service<GetEventsRequest, IEnumerable<EventEntry>>
     {
         private readonly IEventStore _events;
 

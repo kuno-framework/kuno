@@ -9,13 +9,13 @@ using System.Linq;
 using Kuno.Services.Inventory;
 using Kuno.Validation;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Gets all connected remote endpoints.
     /// </summary>
     [EndPoint("_system/endpoints/remote", Method = "GET", Public = false)]
-    public class GetRemoteEndPoints : EndPoint
+    public class GetRemoteEndPoints : Service
     {
         private readonly RemoteServiceInventory _inventory;
 

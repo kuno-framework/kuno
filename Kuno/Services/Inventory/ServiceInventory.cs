@@ -118,7 +118,7 @@ namespace Kuno.Services.Inventory
         /// <param name="assemblies">The assemblies to use to scan.</param>
         public void Load(params Assembly[] assemblies)
         {
-            foreach (var service in assemblies.SafelyGetTypes(typeof(IEndPoint)).Distinct())
+            foreach (var service in assemblies.SafelyGetTypes(typeof(IService)).Distinct())
             {
                 if (!service.GetTypeInfo().IsGenericType && !service.IsDynamic() && !service.GetTypeInfo().IsAbstract)
                 {

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Kuno.Services.EndPoints
+namespace Kuno.Services.Services
 {
     /// <summary>
     /// Request to get requests that have been requested in the application context.
