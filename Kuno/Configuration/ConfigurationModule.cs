@@ -23,13 +23,13 @@ namespace Kuno.Configuration
     /// <seealso cref="Autofac.Module" />
     internal class ConfigurationModule : Module
     {
-        private readonly Stack _stack;
+        private readonly ApplicationStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationModule" /> class.
         /// </summary>
         /// <param name="stack">The current stack.</param>
-        public ConfigurationModule(Stack stack)
+        public ConfigurationModule(ApplicationStack stack)
         {
             _stack = stack;
         }

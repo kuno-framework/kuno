@@ -27,12 +27,12 @@ namespace Kuno.Services.Modules
     /// <seealso cref="Autofac.Module" />
     internal class ServicesModule : Module
     {
-        private readonly Stack _stack;
+        private readonly ApplicationStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServicesModule" /> class.
         /// </summary>
-        public ServicesModule(Stack stack)
+        public ServicesModule(ApplicationStack stack)
         {
             _stack = stack;
         }

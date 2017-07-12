@@ -14,7 +14,7 @@ using Kuno.Validation;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The handle exception step of the usecase execution pipeline.  This attempt to unwrap the exception if it can.
+    /// The handle exception step of the endpoint execution pipeline.  This attempt to unwrap the exception if it can.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class HandleException : IMessageExecutionStep

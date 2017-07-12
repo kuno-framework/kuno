@@ -15,7 +15,7 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The publish events step of the EndPoint execution pipeline.
+    /// The publish events step of the endpoint execution pipeline.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class PublishEvents : IMessageExecutionStep

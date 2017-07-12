@@ -11,7 +11,7 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The completion step of the usecase execution pipeline.
+    /// The completion step of the endpoint execution pipeline.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class Complete : IMessageExecutionStep

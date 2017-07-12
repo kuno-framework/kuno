@@ -17,7 +17,7 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The log completion step of the use case execution pipeline.
+    /// The log completion step of the endpoint execution pipeline.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class LogCompletion : IMessageExecutionStep

@@ -27,13 +27,13 @@ namespace Kuno
     /// The host and main entry point to the stack.
     /// </summary>
     /// <seealso cref="System.IDisposable" />
-    public class Stack : IDisposable
+    public class ApplicationStack : IDisposable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Stack" /> class.
+        /// Initializes a new instance of the <see cref="ApplicationStack" /> class.
         /// </summary>
         /// <param name="markers">Item markers used to identify assemblies.</param>
-        public Stack(params object[] markers)
+        public ApplicationStack(params object[] markers)
         {
             this.Include(this.GetType());
             this.Include(markers);
@@ -48,7 +48,7 @@ namespace Kuno
                 {
                     builder.RegisterModule((Module)Activator.CreateInstance(module));
                 }
-                if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(Stack))
+                if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(ApplicationStack))
                 {
                     builder.RegisterModule((Module)Activator.CreateInstance(module, this));
                 }
@@ -278,9 +278,9 @@ namespace Kuno
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="Stack" /> class.
+        /// Finalizes an instance of the <see cref="ApplicationStack" /> class.
         /// </summary>
-        ~Stack()
+        ~ApplicationStack()
         {
             this.Dispose(false);
         }

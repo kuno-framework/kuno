@@ -20,7 +20,7 @@ using Kuno.Validation;
 namespace Kuno
 {
     /// <summary>
-    /// Extensions for <see cref="Stack" /> instances.
+    /// Extensions for <see cref="ApplicationStack" /> instances.
     /// </summary>
     public static class StackExtensions
     {
@@ -144,7 +144,7 @@ namespace Kuno
         /// <returns>The current instance for method chaining.</returns>
         /// <exception>Thrown when the <paramref name="instance" /> argument is null.</exception>
         /// <exception>Thrown when the <paramref name="configuration" /> argument is null.</exception>
-        public static Stack Use(this Stack instance, Action<ContainerBuilder> configuration)
+        public static ApplicationStack Use(this ApplicationStack instance, Action<ContainerBuilder> configuration)
         {
             Argument.NotNull(instance, nameof(instance));
             Argument.NotNull(configuration, nameof(configuration));

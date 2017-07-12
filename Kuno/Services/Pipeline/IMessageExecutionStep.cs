@@ -11,12 +11,12 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// A defined step of the usecase execution pipeline.
+    /// A defined step of the endpoint execution pipeline.
     /// </summary>
     internal interface IMessageExecutionStep
     {
         /// <summary>
-        /// Executes the step of the message execution pipeline.
+        /// Executes the step of the endpoint execution pipeline.
         /// </summary>
         /// <param name="context">The execution context.</param>
         /// <returns>A task for asynchronous programming.</returns>

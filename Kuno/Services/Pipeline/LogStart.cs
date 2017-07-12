@@ -14,7 +14,7 @@ using Kuno.Validation;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The log startup step of the EndPoint execution pipeline.
+    /// The log startup step of the endpoint execution pipeline.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class LogStart : IMessageExecutionStep

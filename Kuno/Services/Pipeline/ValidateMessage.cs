@@ -14,7 +14,7 @@ using Kuno.Validation;
 namespace Kuno.Services.Pipeline
 {
     /// <summary>
-    /// The validate message step of the usecase execution pipeline.
+    /// The validate message step of the endpoint execution pipeline.
     /// </summary>
     /// <seealso cref="Kuno.Services.Pipeline.IMessageExecutionStep" />
     internal class ValidateMessage : IMessageExecutionStep

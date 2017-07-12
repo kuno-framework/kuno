@@ -19,7 +19,7 @@ namespace Kuno.Caching
         /// Configures the container to use a local cache.
         /// </summary>
         /// <param name="container">The current container.</param>
-        public static void UseLocalCache(this Stack container)
+        public static void UseLocalCache(this ApplicationStack container)
         {
             Argument.NotNull(container, nameof(container));
 

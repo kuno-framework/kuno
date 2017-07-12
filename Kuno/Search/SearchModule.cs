@@ -19,13 +19,13 @@ namespace Kuno.Search
     /// <seealso cref="Autofac.Module" />
     internal class SearchModule : Module
     {
-        private readonly Stack _stack;
+        private readonly ApplicationStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchModule" /> class.
         /// </summary>
         /// <param name="stack">The current stack.</param>
-        public SearchModule(Stack stack)
+        public SearchModule(ApplicationStack stack)
         {
             _stack = stack;
         }

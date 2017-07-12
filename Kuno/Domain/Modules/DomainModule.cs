@@ -15,13 +15,13 @@ namespace Kuno.Domain.Modules
     /// </summary>
     internal class DomainModule : Module
     {
-        private readonly Stack _stack;
+        private readonly ApplicationStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DomainModule" /> class.
         /// </summary>
         /// <param name="stack">The stack.</param>
-        public DomainModule(Stack stack)
+        public DomainModule(ApplicationStack stack)
         {
             _stack = stack;
         }
