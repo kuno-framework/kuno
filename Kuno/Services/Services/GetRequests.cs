@@ -17,7 +17,7 @@ namespace Kuno.Services.Services
     /// Gets requests that have been executed in the application context.
     /// </summary>
     [EndPoint("_system/requests", Method = "GET")]
-    public class GetRequests : Service<GetRequestsRequest, IEnumerable<RequestEntry>>
+    public class GetRequests : Function<GetRequestsRequest, IEnumerable<RequestEntry>>
     {
         private readonly IRequestLog _source;
 

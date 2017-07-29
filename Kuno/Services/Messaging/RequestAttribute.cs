@@ -33,6 +33,6 @@ namespace Kuno.Services.Messaging
         /// Gets the request path.
         /// </summary>
         /// <value>The request path.</value>
-        public string Path { get; }
+        public string Path { get; private set; }
     }
 }

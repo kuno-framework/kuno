@@ -59,7 +59,7 @@ namespace Kuno.Services.Messaging
             var endPoints = _services.Value.Find(instance);
             foreach (var endPoint in endPoints)
             {
-                if (endPoint.InvokeMethod.GetParameters().FirstOrDefault()?.ParameterType == instance.MessageType)
+                if (endPoint.InvokeMethod.GetParameters().FirstOrDefault()?.ParameterType.FullName == instance.MessageType)
                 {
                     await _dispatcher.Value.Route(request, endPoint, context).ConfigureAwait(false);
                 }
@@ -126,7 +126,7 @@ namespace Kuno.Services.Messaging
         {
             var current = new EventMessage(NewId.NextId(), instance);
 
-            foreach (var endPoint in _services.Value.EndPoints.Where(e => e.EndPointType.GetAllAttributes<SubscribeAttribute>().Any(x => x.Channel == current.MessageType.FullName.Split('.').Last())))
+            foreach (var endPoint in _services.Value.Find(current))
             {
                 var request = _requestContext.Value.Resolve(current, endPoint);
 

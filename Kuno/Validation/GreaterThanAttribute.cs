@@ -31,7 +31,7 @@ namespace Kuno.Validation
         /// Gets the value to compare.
         /// </summary>
         /// <value>The value to compare.</value>
-        public int Value { get; }
+        public int Value { get; private set; }
 
         /// <summary>
         /// Returns true if the object value is valid.

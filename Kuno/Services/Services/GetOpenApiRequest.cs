@@ -26,7 +26,7 @@ namespace Kuno.Services.Services
         /// <value>
         ///   <c>true</c> if all endpoints should be retrieved; otherwise, <c>false</c>.
         /// </value>
-        public bool All { get; }
+        public bool All { get; private set; }
 
         /// <summary>
         /// Gets or sets the base path on which the API is served, which is relative to the host. If it is not included, the API is served directly under the host. The value MUST start with a leading slash (/). The basePath does not support path templating.
@@ -34,7 +34,7 @@ namespace Kuno.Services.Services
         /// <value>
         /// The base path on which the API is served.
         /// </value>
-        public string BasePath { get; }
+        public string BasePath { get; private set; }
 
         /// <summary>
         /// Gets the host name to display in the document.
@@ -42,6 +42,6 @@ namespace Kuno.Services.Services
         /// <value>
         /// The host name to display in the document.
         /// </value>
-        public string Host { get; }
+        public string Host { get; private set; }
     }
 }

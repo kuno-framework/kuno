@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -125,10 +126,10 @@ namespace Kuno.Services.Inventory
         /// <returns>Returns endpoint metadata for the specified service.</returns>
         public static IEnumerable<EndPointMetaData> Create(Type service)
         {
-            var interfaces = service.GetInterfaces().Where(e => e.GetTypeInfo().IsGenericType && (e.GetGenericTypeDefinition() == typeof(IService<>) || e.GetGenericTypeDefinition() == typeof(IService<,>))).ToList();
+            var interfaces = service.GetInterfaces().Where(e => e.GetTypeInfo().IsGenericType && (e.GetGenericTypeDefinition() == typeof(IFunction<>) || e.GetGenericTypeDefinition() == typeof(IFunction<,>))).ToList();
             if (interfaces.Any())
             {
-                var path = service.GetPath();
+              
                 var version = service.GetVersion();
                 var summary = service.GetComments();
                 var timeout = service.GetTimeout();
@@ -138,27 +139,60 @@ namespace Kuno.Services.Inventory
                     var method = item.GetMethod("Receive");
                     if (method.DeclaringType != null)
                     {
-                        var attribute = service.GetAllAttributes<EndPointAttribute>().FirstOrDefault();
-
                         var requestType = method.GetParameters().FirstOrDefault()?.ParameterType;
-                        var endPoint = new EndPointMetaData
+
+                        yield return new EndPointMetaData
                         {
-                            Name = attribute?.Name ?? service.Name.ToTitle(),
-                            Path = path,
-                            Method = attribute?.Method ?? "POST",
+                            Name = service.Name.ToTitle(),
                             EndPointType = service,
                             RequestType = requestType,
-                            Tags = attribute?.Tags,
                             ResponseType = GetResponseType(method),
                             Rules = requestType?.GetRules().Select(e => new EndPointRule(e)).ToList(),
                             Version = version,
                             Summary = summary?.Summary,
                             Timeout = timeout,
-                            InvokeMethod = method,
-                            Public = service.GetAllAttributes<EndPointAttribute>().FirstOrDefault()?.Public ?? true,
-                            Secure = attribute?.Secure ?? false
+                            InvokeMethod = method
                         };
-                        yield return endPoint;
+                        
+                        var attributes = service.GetAllAttributes<EndPointAttribute>();
+                        foreach (var attribute in attributes)
+                        {
+                         
+                            yield return new EndPointMetaData
+                            {
+                                Name = attribute.Name ?? service.Name.ToTitle(),
+                                Path = attribute.Path,
+                                Method = attribute.Method ?? "POST",
+                                EndPointType = service,
+                                RequestType = requestType,
+                                Tags = attribute.Tags,
+                                ResponseType = GetResponseType(method),
+                                Rules = requestType?.GetRules().Select(e => new EndPointRule(e)).ToList(),
+                                Version = version,
+                                Summary = summary?.Summary,
+                                Timeout = timeout,
+                                InvokeMethod = method,
+                                Public = attribute.Public,
+                                Secure = attribute.Secure
+                            };
+                        }
+
+                        //var subscriptions = service.GetAllAttributes<SubscribeAttribute>();
+                        //foreach (var subscription in subscriptions)
+                        //{
+                        //    yield return new EndPointMetaData
+                        //    {
+                        //        Name = service.Name.ToTitle(),
+                        //        EndPointType = service,
+                        //        RequestType = requestType,
+                        //        ResponseType = GetResponseType(method),
+                        //        Rules = requestType?.GetRules().Select(e => new EndPointRule(e)).ToList(),
+                        //        Version = version,
+                        //        Summary = summary?.Summary,
+                        //        Timeout = timeout,
+                        //        InvokeMethod = method
+                        //    };
+                        //}
                     }
                 }
             }

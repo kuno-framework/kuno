@@ -34,7 +34,7 @@ namespace Kuno.Services.Inventory
         /// <value>
         /// The application that contain the endpoints.
         /// </value>
-        public ApplicationInformation ApplicationInformation { get; }
+        public ApplicationInformation ApplicationInformation { get; private set; }
 
         /// <summary>
         /// Gets or sets the inventoried end points.
@@ -82,7 +82,7 @@ namespace Kuno.Services.Inventory
         /// <returns>Returns the endpoint for the specified message.</returns>
         public IEnumerable<EndPointMetaData> Find(EventMessage message)
         {
-            return this.EndPoints.Where(e => e.RequestType == message.MessageType || e.EndPointType.GetAllAttributes<SubscribeAttribute>().Any());
+            return this.EndPoints.Where(e => e.RequestType.FullName == message.MessageType || e.EndPointType.GetAllAttributes<SubscribeAttribute>().Any(x => x.Channel == message.Name));
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Kuno.Services.Inventory
         /// <param name="assemblies">The assemblies to use to scan.</param>
         public void Load(params Assembly[] assemblies)
         {
-            foreach (var service in assemblies.SafelyGetTypes(typeof(IService)).Distinct())
+            foreach (var service in assemblies.SafelyGetTypes(typeof(IFunction)).Distinct())
             {
                 if (!service.GetTypeInfo().IsGenericType && !service.IsDynamic() && !service.GetTypeInfo().IsAbstract)
                 {

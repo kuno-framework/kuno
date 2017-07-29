@@ -54,7 +54,7 @@ namespace Kuno.Services.Messaging
         /// Gets the cancellation token.
         /// </summary>
         /// <value>The cancellation token.</value>
-        public CancellationToken CancellationToken { get; }
+        public CancellationToken CancellationToken { get; private set; }
 
         /// <summary>
         /// Gets the date and time that execution completed.
@@ -66,7 +66,7 @@ namespace Kuno.Services.Messaging
         /// Gets the registry entry.
         /// </summary>
         /// <value>The registry entry.</value>
-        public EndPointMetaData EndPoint { get; }
+        public EndPointMetaData EndPoint { get; private set; }
 
         /// <summary>
         /// Gets the raised exception, if any.
@@ -84,7 +84,7 @@ namespace Kuno.Services.Messaging
         /// Gets the parent context.
         /// </summary>
         /// <value>The parent context.</value>
-        public ExecutionContext Parent { get; }
+        public ExecutionContext Parent { get; private set; }
 
         /// <summary>
         /// Gets any raised events.
@@ -96,7 +96,7 @@ namespace Kuno.Services.Messaging
         /// Gets the request context.
         /// </summary>
         /// <value>The request context.</value>
-        public Request Request { get; }
+        public Request Request { get; private set; }
 
         /// <summary>
         /// Gets or sets the response.
@@ -108,7 +108,7 @@ namespace Kuno.Services.Messaging
         /// Gets the date and time that execution started.
         /// </summary>
         /// <value>The date and time that execution started.</value>
-        public DateTimeOffset Started { get; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset Started { get; private set; } = DateTimeOffset.UtcNow;
 
         /// <summary>
         /// Gets any validation errors that were raised as part of execution.

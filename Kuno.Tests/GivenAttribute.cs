@@ -4,7 +4,7 @@ namespace Kuno.Tests
 {
     public class GivenAttribute : Attribute
     {
-        public Type Name { get; }
+        public Type Name { get; private set; }
 
         public GivenAttribute(Type name)
         {

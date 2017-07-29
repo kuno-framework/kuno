@@ -19,9 +19,9 @@ using Kuno.Services.Pipeline;
 namespace Kuno.Services
 {
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.
+    /// A function is a single unit of solution logic that represents a single business capability.
     /// </summary>
-    public abstract class BaseService : IService
+    public abstract class BaseFunction : IFunction
     {
         /// <summary>
         /// Gets the configured <see cref="IDomainFacade" />.
@@ -39,7 +39,7 @@ namespace Kuno.Services
         /// Gets the current context.
         /// </summary>
         /// <value>The current context.</value>
-        protected internal ExecutionContext Context => ((IService) this).Context;
+        protected internal ExecutionContext Context => ((IFunction) this).Context;
 
         /// <summary>
         /// Gets the configured <see cref="IComponentContext" /> instance.
@@ -47,7 +47,7 @@ namespace Kuno.Services
         /// <value>The configured <see cref="IComponentContext" /> instance.</value>
         internal IComponentContext Components { get; set; }
 
-        ExecutionContext IService.Context { get; set; }
+        ExecutionContext IFunction.Context { get; set; }
 
         /// <summary>
         /// Gets the current request.
@@ -100,12 +100,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type does not receive message data and does
+    /// A function is a single unit of solution logic that represents a single business capability.  This endpoint type does not receive message data and does
     /// not return a value.
     /// </summary>
-    public abstract class Service : BaseService, IService<object>
+    public abstract class Function : BaseFunction, IFunction<object>
     {
-        async Task IService<object>.Receive(object instance)
+        async Task IFunction<object>.Receive(object instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
@@ -153,12 +153,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
+    /// A function is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
     /// of the specified type and does not return a value.
     /// </summary>
-    public abstract class Service<TMessage> : BaseService, IService<TMessage>
+    public abstract class Function<TMessage> : BaseFunction, IFunction<TMessage>
     {
-        async Task IService<TMessage>.Receive(TMessage instance)
+        async Task IFunction<TMessage>.Receive(TMessage instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 
@@ -198,12 +198,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
+    /// A function is a single unit of solution logic that represents a single business capability.  This endpoint type takes in a message
     /// of the specified type and returns a value of the specified type.
     /// </summary>
-    public abstract class Service<TMessage, TResponse> : BaseService, IService<TMessage, TResponse>
+    public abstract class Function<TMessage, TResponse> : BaseFunction, IFunction<TMessage, TResponse>
     {
-        async Task<TResponse> IService<TMessage, TResponse>.Receive(TMessage instance)
+        async Task<TResponse> IFunction<TMessage, TResponse>.Receive(TMessage instance)
         {
             await this.Components.Resolve<ValidateMessage>().Execute(this.Context).ConfigureAwait(false);
 

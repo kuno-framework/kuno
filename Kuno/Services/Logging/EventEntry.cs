@@ -42,7 +42,7 @@ namespace Kuno.Services.Logging
                 this.Body = "{ \"error\" : \"Serialization failed.\" }";
             }
             this.Id = instance.Id;
-            this.MessageType = instance.MessageType.FullName;
+            this.MessageType = instance.MessageType;
             this.Name = instance.Name;
             this.EnvironmentName = application.Environment;
         }

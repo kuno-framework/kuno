@@ -12,7 +12,7 @@ namespace Kuno.Services.Services
     /// Gets the [OpenAPI](https://www.openapis.org/) definition for the API.
     /// </summary>
     [EndPoint("_system/api", Method = "GET", Name = "Get OpenAPI Definition", Public = false)]
-    public class GetOpenApi : Service<GetOpenApiRequest, OpenApiDocument>
+    public class GetOpenApi : Function<GetOpenApiRequest, OpenApiDocument>
     {
         private readonly ServiceInventory _services;
         private readonly IConfiguration _configuration;

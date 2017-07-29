@@ -5,7 +5,7 @@
  * the LICENSE file, which is part of this source code package.
  */
 
-namespace Kuno.Services.Logging
+namespace Kuno.Services
 {
     /// <summary>
     /// Contains information about an event that has occurred.

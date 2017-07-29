@@ -11,10 +11,10 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services
 {
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.
-    /// This service type does not receive message data and does not return a value.
+    /// A function is a single unit of solution logic that represents a single business capability.
+    /// This type does not receive message data and does not return a value.
     /// </summary>
-    public interface IService
+    public interface IFunction
     {
         /// <summary>
         /// Gets or sets the current context.
@@ -35,11 +35,11 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.  This service type takes in a message
+    /// A function is a single unit of solution logic that represents a single business capability.  This type takes in a message
     /// of the specified type and does not return a value.
     /// </summary>
     /// <typeparam name="TMessage">The type of message that this endpoint can receive.</typeparam>
-    public interface IService<in TMessage> : IService
+    public interface IFunction<in TMessage> : IFunction
     {
         /// <summary>
         /// Receives the call to the endpoint.
@@ -49,12 +49,12 @@ namespace Kuno.Services
     }
 
     /// <summary>
-    /// A service is a single unit of solution logic that represents a single business capability.  This service type takes in a message
+    /// A function is a single unit of solution logic that represents a single business capability.  This type takes in a message
     /// of the specified type and returns a value of the specified type.
     /// </summary>
     /// <typeparam name="TRequest">The type of message that this endpoint can receive.</typeparam>
     /// <typeparam name="TResponse">The type of message this endpoint returns.</typeparam>
-    public interface IService<in TRequest, TResponse> : IService
+    public interface IFunction<in TRequest, TResponse> : IFunction
     {
         /// <summary>
         /// Receives the call to the endpoint.

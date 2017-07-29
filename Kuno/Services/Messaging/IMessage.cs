@@ -18,7 +18,7 @@ namespace Kuno.Services.Messaging
         /// Gets the message body.
         /// </summary>
         /// <value>The body or content of the message.</value>
-        object Body { get; }
+        string Body { get; }
 
         /// <summary>
         /// Gets the message identifier.
@@ -30,7 +30,7 @@ namespace Kuno.Services.Messaging
         /// Gets the message type.
         /// </summary>
         /// <value>The type of the message.</value>
-        Type MessageType { get; }
+        string MessageType { get; }
 
         /// <summary>
         /// Gets the message name.

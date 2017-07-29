@@ -34,12 +34,12 @@ namespace Kuno.Services
         /// Gets the dependency execution result.
         /// </summary>
         /// <value>The dependency execution result.</value>
-        public MessageResult Dependency { get; }
+        public MessageResult Dependency { get; private set; }
 
         /// <summary>
         /// Gets the current request.
         /// </summary>
         /// <value>The current request.</value>
-        public Request Request { get; }
+        public Request Request { get; private set; }
     }
 }

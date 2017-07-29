@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using Kuno.Services.Messaging;
+using Newtonsoft.Json;
 
 namespace Kuno.Caching
 {
@@ -29,6 +30,6 @@ namespace Kuno.Caching
         /// Gets the keys updated.
         /// </summary>
         /// <value>The keys updated.</value>
-        public IEnumerable<string> KeysUpdated => this.Body as IEnumerable<string>;
+        public IEnumerable<string> KeysUpdated => JsonConvert.DeserializeObject<IEnumerable<string>>(this.Body);
     }
 }

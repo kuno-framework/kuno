@@ -17,7 +17,7 @@ namespace Kuno.Services.Services
     /// Gets responses that have been executed in the application context.
     /// </summary>
     [EndPoint("_system/responses", Method = "GET")]
-    public class GetResponses : Service<GetResponsesRequest, IEnumerable<ResponseEntry>>
+    public class GetResponses : Function<GetResponsesRequest, IEnumerable<ResponseEntry>>
     {
         private readonly IResponseLog _source;
 

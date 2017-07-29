@@ -40,7 +40,7 @@ namespace Kuno.Services.Messaging
         /// Gets the message body.
         /// </summary>
         /// <value>The body or content of the message.</value>
-        public object Body { get; }
+        public object Body { get; private set; }
 
         /// <summary>
         /// Gets the message identifier.
@@ -52,7 +52,7 @@ namespace Kuno.Services.Messaging
         /// Gets the message type.
         /// </summary>
         /// <value>The type of the message.</value>
-        public Type MessageType { get; }
+        public Type MessageType { get; private set; }
 
         /// <summary>
         /// Gets the message name.
@@ -64,7 +64,7 @@ namespace Kuno.Services.Messaging
         /// Gets the message timestamp.
         /// </summary>
         /// <value>When the message was created.</value>
-        public DateTimeOffset TimeStamp { get; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset TimeStamp { get; private set; } = DateTimeOffset.UtcNow;
 
         /// <inheritdoc />
         public bool Equals(MessageEnvelope other)

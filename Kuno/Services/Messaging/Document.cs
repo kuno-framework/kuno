@@ -27,12 +27,12 @@ namespace Kuno.Services.Messaging
         /// Gets the document content.
         /// </summary>
         /// <value>The document content.</value>
-        public byte[] Content { get; }
+        public byte[] Content { get; private set; }
 
         /// <summary>
         /// Gets the file name of the document.
         /// </summary>
         /// <value>The file name of the document.</value>
-        public string Name { get; }
+        public string Name { get; private set; }
     }
 }

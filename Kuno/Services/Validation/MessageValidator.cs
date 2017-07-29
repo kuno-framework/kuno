@@ -1,16 +1,13 @@
-﻿/* 
- * Copyright (c) Kuno Contributors
- * 
- * This file is subject to the terms and conditions defined in
- * the LICENSE file, which is part of this source code package.
- */
+﻿// Copyright (c) Kuno Contributors
+// 
+// This file is subject to the terms and conditions defined in
+// the LICENSE file, which is part of this source code package.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Kuno.Services.Messaging;
 using Kuno.Validation;
 
@@ -37,25 +34,20 @@ namespace Kuno.Services.Validation
         /// <summary>
         /// Validates the specified message.
         /// </summary>
-        /// <param name="command">The message to validate.</param>
+        /// <param name="message">The message to validate.</param>
         /// <param name="context">The current context.</param>
         /// <returns>The <see cref="ValidationError">messages</see> returned from validation routines.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="command" /> argument is null.</exception>
-        public Task<IEnumerable<ValidationError>> Validate(object command, ExecutionContext context)
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message" /> argument is null.</exception>
+        public Task<IEnumerable<ValidationError>> Validate(IMessage message, ExecutionContext context)
         {
-            Argument.NotNull(command, nameof(command));
-
-            var instance = command as TCommand;
-            if (instance == null)
-            {
-                instance = (TCommand) JsonConvert.DeserializeObject(JsonConvert.SerializeObject(command), typeof(TCommand));
-            }
+            Argument.NotNull(message, nameof(message));
 
             if (context.EndPoint.Secure && !(context.Request.User?.Identity?.IsAuthenticated ?? false))
             {
-                return Task.FromResult(new[] {new ValidationError("Unauthorized", "The call to \"" + context.Request.Path + "\" requires authentication.", ValidationType.Security)}.AsEnumerable());
+                return Task.FromResult(new[] { new ValidationError("Unauthorized", "The call to \"" + context.Request.Path + "\" requires authentication.", ValidationType.Security) }.AsEnumerable());
             }
 
+            var instance = message.GetBody<TCommand>();
 
             var input = this.CheckInputRules(instance).ToList();
             if (input.Any())
@@ -91,7 +83,7 @@ namespace Kuno.Services.Validation
             {
                 if (rule is IUseExecutionContext)
                 {
-                    ((IUseExecutionContext) rule).UseContext(context);
+                    ((IUseExecutionContext)rule).UseContext(context);
                 }
                 var result = rule.Validate(command).ToList();
                 if (result.Any())
@@ -138,7 +130,7 @@ namespace Kuno.Services.Validation
             {
                 if (rule is IUseExecutionContext)
                 {
-                    ((IUseExecutionContext) rule).UseContext(context);
+                    ((IUseExecutionContext)rule).UseContext(context);
                 }
                 var result = rule.Validate(command).ToList();
                 if (result.Any())

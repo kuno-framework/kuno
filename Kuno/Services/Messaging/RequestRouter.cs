@@ -50,17 +50,17 @@ namespace Kuno.Services.Messaging
             var context = new ExecutionContext(request, endPoint, source.Token, parentContext);
 
             var handler = _components.Resolve(endPoint.EndPointType);
-            var service = handler as IService;
+            var service = handler as IFunction;
             if (service != null)
             {
                 service.Context = context;
             }
 
-            var body = request.Message.Body;
+            object body = request.Message.Body;
             var parameterType = endPoint.InvokeMethod.GetParameters().First().ParameterType;
-            if (body == null || body.GetType() != parameterType)
+            if (request.Message.Body == null || request.Message.Body.GetType() != parameterType)
             {
-                body = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(body ?? ""), parameterType);
+                body = JsonConvert.DeserializeObject(request.Message.Body, parameterType);
             }
 
             await ((Task)endPoint.InvokeMethod.Invoke(handler, new[] { body })).ConfigureAwait(false);

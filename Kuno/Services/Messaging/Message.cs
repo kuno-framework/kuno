@@ -1,16 +1,24 @@
-﻿/* 
- * Copyright (c) Kuno Contributors
- * 
- * This file is subject to the terms and conditions defined in
- * the LICENSE file, which is part of this source code package.
- */
+﻿// Copyright (c) Kuno Contributors
+// 
+// This file is subject to the terms and conditions defined in
+// the LICENSE file, which is part of this source code package.
 
 using System;
+using Kuno.Serialization;
 using Kuno.Utilities.NewId;
 using Kuno.Validation;
+using Newtonsoft.Json;
 
 namespace Kuno.Services.Messaging
 {
+    public static class MessageExtensions
+    {
+        public static T GetBody<T>(this IMessage instance)
+        {
+            return JsonConvert.DeserializeObject<T>(instance.Body, DefaultSerializationSettings.Instance);
+        }
+    }
+
     /// <summary>
     /// An atomic packet of data that is transmitted through a message channel.
     /// </summary>
@@ -26,8 +34,8 @@ namespace Kuno.Services.Messaging
 
             var type = body.GetType();
 
-            this.Body = body;
-            this.MessageType = type;
+            this.Body = JsonConvert.SerializeObject(body, DefaultSerializationSettings.Instance);
+            this.MessageType = type.FullName;
             this.Name = type.Name;
         }
 
@@ -39,16 +47,16 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public string Id { get; } = NewId.NextId();
+        public string Id { get; private set; } = NewId.NextId();
 
         /// <inheritdoc />
-        public DateTimeOffset TimeStamp { get; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset TimeStamp { get; private set; } = DateTimeOffset.UtcNow;
 
         /// <inheritdoc />
-        public object Body { get; }
+        public string Body { get; private set; }
 
         /// <inheritdoc />
-        public Type MessageType { get; }
+        public string MessageType { get; private set; }
 
         /// <inheritdoc />
         public string Name { get; protected set; }

@@ -14,7 +14,7 @@ using Kuno.Services.Messaging;
 namespace Kuno.Services
 {
     /// <summary>
-    /// Contains methods to configure a <see cref="ApplicationStack" />.
+    /// Contains methods to configure a <see cref="KunoStack" />.
     /// </summary>
     public static class MessagingExtensions
     {
@@ -25,7 +25,7 @@ namespace Kuno.Services
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Returns the event entries that fall within the specified time frame.</returns>
-        public static IEnumerable<EventEntry> GetEvents(this ApplicationStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
+        public static IEnumerable<EventEntry> GetEvents(this KunoStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             return instance.Container.Resolve<IEventStore>().GetEvents(start, end).Result;
         }
@@ -37,7 +37,7 @@ namespace Kuno.Services
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Returns the request entries that fall within the specified time frame.</returns>
-        public static IEnumerable<RequestEntry> GetRequests(this ApplicationStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
+        public static IEnumerable<RequestEntry> GetRequests(this KunoStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             return instance.Container.Resolve<IRequestLog>().GetEntries(start, end).Result;
         }
@@ -49,7 +49,7 @@ namespace Kuno.Services
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns>Returns the response entries that fall within the specified time frame.</returns>
-        public static IEnumerable<ResponseEntry> GetResponses(this ApplicationStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
+        public static IEnumerable<ResponseEntry> GetResponses(this KunoStack instance, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             return instance.Container.Resolve<IResponseLog>().GetEntries(start, end).Result;
         }

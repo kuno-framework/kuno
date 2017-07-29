@@ -30,6 +30,6 @@ namespace Kuno.Validation
         /// Gets the validation errors.
         /// </summary>
         /// <value>The validation errors.</value>
-        public ValidationError[] ValidationErrors { get; }
+        public ValidationError[] ValidationErrors { get; private set; }
     }
 }

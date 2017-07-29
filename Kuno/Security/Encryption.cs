@@ -283,6 +283,7 @@ namespace Kuno.Security
                 }
                 provider.SetValidKey(key);
                 provider.SetValidIV(key);
+                provider.Padding = PaddingMode.None;
 
 
                 using (var memoryStream = new MemoryStream())
@@ -315,6 +316,7 @@ namespace Kuno.Security
                 }
                 provider.SetValidKey(key);
                 provider.SetValidIV(key);
+                provider.Padding = PaddingMode.None;
 
 
                 using (var memoryStream = new MemoryStream())
@@ -349,12 +351,13 @@ namespace Kuno.Security
                 }
                 provider.SetValidKey(key);
                 provider.SetValidIV(key);
+                provider.Padding = PaddingMode.None;
 
                 var content = Convert.FromBase64String(text);
 
                 using (var memoryStream = new MemoryStream(content, 0, content.Length))
                 {
-                    var cryptoStream = new CryptoStream(memoryStream, provider?.CreateDecryptor(), CryptoStreamMode.Read);
+                    var cryptoStream = new CryptoStream(memoryStream, provider.CreateDecryptor(), CryptoStreamMode.Read);
                     using (var reader = new StreamReader(cryptoStream))
                     {
                         target = reader.ReadToEnd();
@@ -369,7 +372,7 @@ namespace Kuno.Security
             {
                 if (created)
                 {
-                    provider?.Dispose();
+                    provider.Dispose();
                 }
             }
             return target;
@@ -387,10 +390,11 @@ namespace Kuno.Security
                 }
                 provider.SetValidKey(key);
                 provider.SetValidIV(key);
+                provider.Padding = PaddingMode.None;
 
                 using (var memoryStream = new MemoryStream())
                 {
-                    using (var cryptoStream = new CryptoStream(memoryStream, provider?.CreateDecryptor(), CryptoStreamMode.Write))
+                    using (var cryptoStream = new CryptoStream(memoryStream, provider.CreateDecryptor(), CryptoStreamMode.Write))
                     {
                         cryptoStream.Write(text, 0, text.Length);
                         cryptoStream.FlushFinalBlock();
@@ -406,7 +410,7 @@ namespace Kuno.Security
             {
                 if (created)
                 {
-                    provider?.Dispose();
+                    provider.Dispose();
                 }
             }
         }

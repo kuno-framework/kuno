@@ -10,7 +10,7 @@ using Kuno.Domain;
 using Kuno.Logging;
 using Kuno.Reflection;
 using Kuno.Search;
-using Kuno.Services.Logging;
+using Kuno.Services;
 using Kuno.Services.Messaging;
 using Microsoft.Extensions.Configuration;
 using Module = Autofac.Module;
@@ -27,13 +27,13 @@ namespace Kuno
     /// The host and main entry point to the stack.
     /// </summary>
     /// <seealso cref="System.IDisposable" />
-    public class ApplicationStack : IDisposable
+    public class KunoStack : IDisposable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationStack" /> class.
+        /// Initializes a new instance of the <see cref="KunoStack" /> class.
         /// </summary>
         /// <param name="markers">Item markers used to identify assemblies.</param>
-        public ApplicationStack(params object[] markers)
+        public KunoStack(params object[] markers)
         {
             this.Include(this.GetType());
             this.Include(markers);
@@ -48,7 +48,7 @@ namespace Kuno
                 {
                     builder.RegisterModule((Module)Activator.CreateInstance(module));
                 }
-                if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(ApplicationStack))
+                if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(KunoStack))
                 {
                     builder.RegisterModule((Module)Activator.CreateInstance(module, this));
                 }
@@ -61,7 +61,7 @@ namespace Kuno
         /// Gets the assemblies that are used for loading components.
         /// </summary>
         /// <value>The assemblies that are used for loading components.</value>
-        public ObservableCollection<Assembly> Assemblies { get; } = new ObservableCollection<Assembly>();
+        public ObservableCollection<Assembly> Assemblies { get; private set; } = new ObservableCollection<Assembly>();
 
         /// <summary>
         /// Gets the configured <see cref="IConfiguration" />.
@@ -72,7 +72,7 @@ namespace Kuno
         /// <summary>
         /// Gets the configured <see cref="IContainer" />.
         /// </summary>
-        public IContainer Container { get; }
+        public IContainer Container { get; private set; }
 
         /// <summary>
         /// Gets the configured <see cref="IDomainFacade" />.
@@ -278,9 +278,9 @@ namespace Kuno
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="ApplicationStack" /> class.
+        /// Finalizes an instance of the <see cref="KunoStack" /> class.
         /// </summary>
-        ~ApplicationStack()
+        ~KunoStack()
         {
             this.Dispose(false);
         }

@@ -27,12 +27,12 @@ namespace Kuno.Services.Modules
     /// <seealso cref="Autofac.Module" />
     internal class ServicesModule : Module
     {
-        private readonly ApplicationStack _stack;
+        private readonly KunoStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServicesModule" /> class.
         /// </summary>
-        public ServicesModule(ApplicationStack stack)
+        public ServicesModule(KunoStack stack)
         {
             _stack = stack;
         }
@@ -97,11 +97,11 @@ namespace Kuno.Services.Modules
                 .AllPropertiesAutowired();
 
             builder.RegisterAssemblyTypes(assemblies)
-                .Where(e => e.GetInterfaces().Any(x => x == typeof(IService)))
+                .Where(e => e.GetInterfaces().Any(x => x == typeof(IFunction)))
                 .AsBaseAndContractTypes()
                 .AsSelf()
                 .AllPropertiesAutowired()
-                .OnActivated(e => { ((IService)e.Instance).OnStart(); });
+                .OnActivated(e => { ((IFunction)e.Instance).OnStart(); });
 
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(e => e.GetInterfaces().Contains(typeof(IEventPublisher)))

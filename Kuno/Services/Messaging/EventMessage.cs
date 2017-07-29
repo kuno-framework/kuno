@@ -1,13 +1,12 @@
-﻿/* 
- * Copyright (c) Kuno Contributors
- * 
- * This file is subject to the terms and conditions defined in
- * the LICENSE file, which is part of this source code package.
- */
+﻿// Copyright (c) Kuno Contributors
+// 
+// This file is subject to the terms and conditions defined in
+// the LICENSE file, which is part of this source code package.
 
+using System;
 using System.Linq;
 using Kuno.Reflection;
-using Kuno.Services.Logging;
+using Newtonsoft.Json;
 
 namespace Kuno.Services.Messaging
 {
@@ -16,6 +15,15 @@ namespace Kuno.Services.Messaging
     /// </summary>
     public class EventMessage : Message
     {
+        /// <summary>
+        /// Prevents a default instance of the <see cref="EventMessage"/> class from being created.
+        /// </summary>
+        /// <remarks>Keep for serialization.</remarks>
+        [JsonConstructor]
+        private EventMessage()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EventMessage" /> class.
         /// </summary>
@@ -44,7 +52,7 @@ namespace Kuno.Services.Messaging
         /// Gets the request message identifier.
         /// </summary>
         /// <value>The request message identifier.</value>
-        public string RequestId { get; }
+        public string RequestId { get; private set; }
 
         private string GetEventName()
         {
@@ -54,7 +62,7 @@ namespace Kuno.Services.Messaging
             {
                 return attribute.Name;
             }
-            return type.Name;
+            return this.Name;
         }
     }
 }

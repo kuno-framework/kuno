@@ -16,13 +16,13 @@ namespace Kuno.Reflection
     /// <seealso cref="Autofac.Module" />
     public class ReflectionModule : Module
     {
-        private readonly ApplicationStack _stack;
+        private readonly KunoStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionModule" /> class.
         /// </summary>
         /// <param name="stack">The stack.</param>
-        public ReflectionModule(ApplicationStack stack)
+        public ReflectionModule(KunoStack stack)
         {
             _stack = stack;
         }

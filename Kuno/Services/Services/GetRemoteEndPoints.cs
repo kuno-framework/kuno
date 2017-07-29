@@ -15,7 +15,7 @@ namespace Kuno.Services.Services
     /// Gets all connected remote endpoints.
     /// </summary>
     [EndPoint("_system/endpoints/remote", Method = "GET", Public = false)]
-    public class GetRemoteEndPoints : Service
+    public class GetRemoteEndPoints : Function
     {
         private readonly RemoteServiceInventory _inventory;
 

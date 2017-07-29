@@ -27,9 +27,9 @@ namespace Kuno.Tests
         public ClaimsPrincipal User { get; set; }
     }
 
-    public class TestStack : ApplicationStack
+    public class TestStack : KunoStack
     {
-        public List<EventMessage> RaisedEvents { get; } = new List<EventMessage>();
+        public List<EventMessage> RaisedEvents { get; private set; } = new List<EventMessage>();
 
 #if !core
         public TestStack()
@@ -51,7 +51,7 @@ namespace Kuno.Tests
                                     builder.RegisterModule((Autofac.Module)Activator.CreateInstance(module));
                                 });
                             }
-                            if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(ApplicationStack))
+                            if (module.GetConstructors().SingleOrDefault()?.GetParameters().SingleOrDefault()?.ParameterType == typeof(KunoStack))
                             {
                                 this.Use(builder =>
                                 {

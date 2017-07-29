@@ -28,7 +28,7 @@ namespace Kuno.Validation
         /// Gets the message.
         /// </summary>
         /// <value>The message.</value>
-        public string Message { get; }
+        public string Message { get; private set; }
 
         /// <summary>
         /// Returns true if the object value is valid.

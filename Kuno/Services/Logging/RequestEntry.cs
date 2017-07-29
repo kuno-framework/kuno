@@ -50,13 +50,13 @@ namespace Kuno.Services.Logging
             if (request.Message is IMessage)
             {
                 var message = request.Message;
-                this.RequestType = message.MessageType?.FullName;
+                this.RequestType = message.MessageType;
                 this.RequestId = message.Id;
                 this.TimeStamp = message.TimeStamp;
             }
             else
             {
-                this.RequestType = request.Message?.MessageType?.FullName;
+                this.RequestType = request.Message?.MessageType;
             }
             this.SessionId = request.SessionId;
             this.UserName = request.User?.Identity?.Name;

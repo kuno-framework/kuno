@@ -70,7 +70,7 @@ namespace Kuno.Validation
         /// <value>
         /// The message code.
         /// </value>
-        public string Code { get; }
+        public string Code { get; private set; }
 
         /// <summary>
         /// Gets the message text.
@@ -78,7 +78,7 @@ namespace Kuno.Validation
         /// <value>
         /// The message text.
         /// </value>
-        public string Message { get; }
+        public string Message { get; private set; }
 
         /// <summary>
         /// Gets validation type.

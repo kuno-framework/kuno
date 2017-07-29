@@ -11,11 +11,11 @@ namespace Kuno.Tests
 {
     public class TestDispatcher : RequestRouter, IRemoteRouter
     {
-        private Dictionary<Type, Func<object, Request, object>> _endPoints = new Dictionary<Type, Func<object, Request, object>>();
+        private Dictionary<string, Func<object, Request, object>> _endPoints = new Dictionary<string, Func<object, Request, object>>();
 
         public void UseEndPoint<T>(Action<T, Request> action)
         {
-            _endPoints.Add(typeof(T), (a, b) =>
+            _endPoints.Add(typeof(T).FullName, (a, b) =>
             {
                 action((T)a, b);
                 return null;
@@ -24,7 +24,7 @@ namespace Kuno.Tests
 
         public void UseEndPoint<T>(Func<T, Request, object> action)
         {
-            _endPoints.Add(typeof(T), (a, b) => action((T)a, b));
+            _endPoints.Add(typeof(T).FullName, (a, b) => action((T)a, b));
         }
 
         public TestDispatcher(IComponentContext components) : base(components)

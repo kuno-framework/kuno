@@ -32,6 +32,6 @@ namespace Kuno.Services
         /// Gets the channel that the event handler should subscribe to.
         /// </summary>
         /// <value>The channel that the event handler should subscribe to.</value>
-        public string Channel { get; }
+        public string Channel { get; private set; }
     }
 }

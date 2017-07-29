@@ -16,7 +16,7 @@ namespace Kuno.Services.Services
     /// Gets the events that have occurred within the application context.
     /// </summary>
     [EndPoint("_system/events", Method = "GET")]
-    public class GetEvents : Service<GetEventsRequest, IEnumerable<EventEntry>>
+    public class GetEvents : Function<GetEventsRequest, IEnumerable<EventEntry>>
     {
         private readonly IEventStore _events;
 

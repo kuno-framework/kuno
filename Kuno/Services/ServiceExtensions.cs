@@ -20,7 +20,7 @@ namespace Kuno.Services
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>Kuno.Services.Inventory.ServiceInventory.</returns>
-        public static ServiceInventory GetServices(this ApplicationStack instance)
+        public static ServiceInventory GetServices(this KunoStack instance)
         {
             return instance.Container.Resolve<ServiceInventory>();
         }

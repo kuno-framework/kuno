@@ -7,8 +7,8 @@
 
 using System.IO;
 using Autofac;
-using Microsoft.Extensions.Configuration;
 using Kuno.Caching;
+using Microsoft.Extensions.Configuration;
 using Kuno.Domain.Modules;
 using Kuno.Logging;
 using Kuno.Reflection;
@@ -23,13 +23,13 @@ namespace Kuno.Configuration
     /// <seealso cref="Autofac.Module" />
     internal class ConfigurationModule : Module
     {
-        private readonly ApplicationStack _stack;
+        private readonly KunoStack _stack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationModule" /> class.
         /// </summary>
         /// <param name="stack">The current stack.</param>
-        public ConfigurationModule(ApplicationStack stack)
+        public ConfigurationModule(KunoStack stack)
         {
             _stack = stack;
         }

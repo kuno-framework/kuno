@@ -41,6 +41,6 @@ namespace Kuno.Services.Inventory
         /// Gets the relative path the endpoint.  Used to identify the endpoint.
         /// </summary>
         /// <value>The relative path the endpoint.</value>
-        public string Path { get; }
+        public string Path { get; private set; }
     }
 }

@@ -71,10 +71,10 @@ namespace Kuno.Services.Messaging
         {
             return new Request
             {
-                CorrelationId = parent.CorrelationId,
-                SourceAddress = parent.SourceAddress,
-                SessionId = parent.SessionId,
-                User = parent.User,
+                CorrelationId = parent?.CorrelationId,
+                SourceAddress = parent?.SourceAddress,
+                SessionId = parent?.SessionId,
+                User = parent?.User,
                 Parent = parent,
                 Message = instance
             };
@@ -141,6 +141,10 @@ namespace Kuno.Services.Messaging
 
         private IMessage GetMessage(object message, EndPointMetaData endPoint)
         {
+            if (message is IMessage)
+            {
+                return message as IMessage;
+            }
             if (message != null && message.GetType() == endPoint.RequestType)
             {
                 return new Message(message);
