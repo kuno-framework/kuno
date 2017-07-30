@@ -12,18 +12,18 @@ using Kuno.Services.Validation;
 using Kuno.Text;
 using Kuno.Validation;
 
-namespace Kuno.Services.Inventory
+namespace Kuno.Services.Registry
 {
     /// <summary>
-    /// Contains information about an endpoint rule.
+    /// Contains information about a function rule.
     /// </summary>
-    public class EndPointRule
+    public class FunctionRule
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EndPointRule" /> class.
+        /// Initializes a new instance of the <see cref="FunctionRule" /> class.
         /// </summary>
-        /// <param name="type">The endpoint type.</param>
-        public EndPointRule(Type type)
+        /// <param name="type">The function rule type.</param>
+        public FunctionRule(Type type)
         {
             this.Name = type.Name.ToSentence();
             var baseType = type.GetTypeInfo().BaseType?.GetGenericTypeDefinition();

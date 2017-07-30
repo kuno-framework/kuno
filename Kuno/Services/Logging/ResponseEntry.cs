@@ -41,7 +41,7 @@ namespace Kuno.Services.Logging
             this.CorrelationId = context.Request.CorrelationId;
             this.RequestId = context.Request.Message.Id;
             this.Completed = context.Completed;
-            this.EndPoint = context.EndPoint.EndPointType.AssemblyQualifiedName;
+            this.EndPoint = context.Function.FunctionType.AssemblyQualifiedName;
             this.Exception = context.Exception?.ToString();
             this.IsSuccessful = context.IsSuccessful;
             this.Started = context.Started;

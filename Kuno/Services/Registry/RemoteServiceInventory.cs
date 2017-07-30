@@ -9,7 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Kuno.Services.Inventory
+namespace Kuno.Services.Registry
 {
     /// <summary>
     /// Maintains an inventory of remote services and updates them when necessary.

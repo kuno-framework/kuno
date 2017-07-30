@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Kuno.Configuration;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Text;
 using Kuno.Utilities.NewId;
 using Kuno.Validation;
@@ -108,28 +108,28 @@ namespace Kuno.Services.OpenApi
         public List<Tag> Tags { get; set; } = new List<Tag> { new Tag { Name = "Kuno", Description = "System defined endpoints." } };
 
         /// <summary>
-        /// Loads the document using hte specified service inventory.
+        /// Loads the document using the specified service inventory.
         /// </summary>
         /// <param name="services">The service inventory.</param>
         /// <param name="includeAll">Indicates whether all endpoints should be retreived or just public.</param>
-        public void Load(ServiceInventory services, bool includeAll = false)
+        public void Load(ServiceRegistry services, bool includeAll = false)
         {
             this.Info = services.ApplicationInformation;
-            var endPoints = services.EndPoints.Where(e => includeAll || e.Public && !e.IsVersioned).ToList();
+            var endPoints = services.EndPoints.Where(e => includeAll || e.Path?.StartsWith("_") == false).ToList();
             foreach (var endPoint in endPoints)
             {
-                if (endPoint.RequestType != null)
+                if (endPoint.Function.RequestType != null)
                 {
-                    this.Definitions.GetOrAdd(endPoint.RequestType);
+                    this.Definitions.GetOrAdd(endPoint.Function.RequestType);
                 }
-                if (endPoint.ResponseType != null)
+                if (endPoint.Function.ResponseType != null)
                 {
-                    this.Definitions.GetOrAdd(endPoint.ResponseType);
+                    this.Definitions.GetOrAdd(endPoint.Function.ResponseType);
                 }
 
                 if (endPoint.Path != null)
                 {
-                    this.Paths.Add("/" + endPoint.Path, new PathItem
+                    this.Paths.Add("/" + endPoint.VersionedPath, new PathItem
                     {
                         Post = this.GetPostOperation(endPoint),
                         Get = this.GetGetOperation(endPoint)
@@ -138,12 +138,12 @@ namespace Kuno.Services.OpenApi
             }
         }
 
-        private Operation GetGetOperation(EndPointMetaData endPoint)
+        private Operation GetGetOperation(EndPoint endPoint)
         {
-            if (endPoint.Method == "GET")
+            if (endPoint.HttpMethod == "GET")
             {
                 var parameters = new List<IParameter>();
-                foreach (var property in endPoint.RequestType.GetProperties())
+                foreach (var property in endPoint.Function.RequestType.GetProperties())
                 {
                     var schema = this.Definitions.CreatePrimitiveSchema(property.PropertyType);
                     var required = property.GetCustomAttributes<ValidationAttribute>(true).Any();
@@ -162,7 +162,7 @@ namespace Kuno.Services.OpenApi
                 {
                     Tags = this.GetTags(endPoint).ToList(),
                     Summary = endPoint.Name,
-                    Description = endPoint.Summary,
+                    Description = endPoint.Function.Summary,
                     Consumes = new List<string> { "application/json" },
                     Produces = new List<string> { "application/json" },
                     OperationId = NewId.NextId().Replace("-", ""),
@@ -185,15 +185,15 @@ namespace Kuno.Services.OpenApi
             return null;
         }
 
-        private Operation GetPostOperation(EndPointMetaData endPoint)
+        private Operation GetPostOperation(EndPoint endPoint)
         {
-            if (endPoint.Method == "POST")
+            if (endPoint.HttpMethod == "POST")
             {
                 var operation = new Operation
                 {
                     Tags = this.GetTags(endPoint).ToList(),
                     Summary = endPoint.Name,
-                    Description = endPoint.Summary,
+                    Description = endPoint.Function.Summary,
                     Consumes = new List<string> { "application/json" },
                     Produces = new List<string> { "application/json" },
                     OperationId = NewId.NextId().Replace("-", ""),
@@ -216,21 +216,21 @@ namespace Kuno.Services.OpenApi
             return null;
         }
 
-        private IEnumerable<IParameter> GetPostParameters(EndPointMetaData endPoint)
+        private IEnumerable<IParameter> GetPostParameters(EndPoint endPoint)
         {
-            if (endPoint.RequestType != null && endPoint.RequestType != typeof(object))
+            if (endPoint.Function.RequestType != null && endPoint.Function.RequestType != typeof(object))
             {
                 yield return new BodyParameter
                 {
-                    Schema = this.Definitions.GetReferenceSchema(endPoint.RequestType, endPoint.RequestType.GetComments()?.Summary)
+                    Schema = this.Definitions.GetReferenceSchema(endPoint.Function.RequestType, endPoint.Function.RequestType.GetComments()?.Summary)
                 };
             }
         }
 
-        private Dictionary<string, Response> GetResponses(EndPointMetaData endPoint)
+        private Dictionary<string, Response> GetResponses(EndPoint endPoint)
         {
             var responses = new Dictionary<string, Response>();
-            if (endPoint.ResponseType == null)
+            if (endPoint.Function.ResponseType == null)
             {
                 responses.Add("204", new Response
                 {
@@ -239,22 +239,22 @@ namespace Kuno.Services.OpenApi
             }
             else
             {
-                var responseType = endPoint.ResponseType;
+                var responseType = endPoint.Function.ResponseType;
                 responses.Add("200", new Response
                 {
                     Description = responseType.GetComments()?.Summary ?? "",
-                    Schema = this.Definitions.GetReferenceSchema(responseType, endPoint.ResponseType.GetComments()?.Summary)
+                    Schema = this.Definitions.GetReferenceSchema(responseType, endPoint.Function.ResponseType.GetComments()?.Summary)
                 });
             }
             var builder = new StringBuilder();
-            foreach (var property in endPoint.RequestType.GetProperties())
+            foreach (var property in endPoint.Function.RequestType.GetProperties())
             {
                 foreach (var attribute in property.GetCustomAttributes<ValidationAttribute>(true))
                 {
                     builder.AppendLine("1. " + attribute.GetValidationError(property).Message + "\r\n");
                 }
             }
-            foreach (var source in endPoint.Rules.Where(e => e.RuleType == ValidationType.Input))
+            foreach (var source in endPoint.Function.Rules.Where(e => e.RuleType == ValidationType.Input))
             {
                 builder.AppendLine(source.Name.ToTitle() + ".  ");
             }
@@ -277,7 +277,7 @@ namespace Kuno.Services.OpenApi
                 });
             }
 
-            foreach (var source in endPoint.Rules.Where(e => e.RuleType == ValidationType.Business))
+            foreach (var source in endPoint.Function.Rules.Where(e => e.RuleType == ValidationType.Business))
             {
                 builder.AppendLine("1. " + source.Name.ToTitle() + ".\r\n");
             }
@@ -290,7 +290,7 @@ namespace Kuno.Services.OpenApi
                 });
             }
             builder.Clear();
-            foreach (var source in endPoint.Rules.Where(e => e.RuleType == ValidationType.Security))
+            foreach (var source in endPoint.Function.Rules.Where(e => e.RuleType == ValidationType.Security))
             {
                 builder.AppendLine("1. " + source.Name.ToTitle() + ".\r\n");
             }
@@ -314,7 +314,7 @@ namespace Kuno.Services.OpenApi
             return responses;
         }
 
-        private IEnumerable<string> GetTags(EndPointMetaData endPoint)
+        private IEnumerable<string> GetTags(EndPoint endPoint)
         {
             if (endPoint.Path == null)
             {

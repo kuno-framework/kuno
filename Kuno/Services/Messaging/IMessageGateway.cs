@@ -39,7 +39,7 @@ namespace Kuno.Services.Messaging
         /// <param name="channel">The message channel.</param>
         /// <param name="message">The message to publish.</param>
         /// <returns>A task for asynchronous programming.</returns>
-        void Publish(string channel, string message);
+        Task Publish(string channel, object message);
 
         /// <summary>
         /// Publishes the specified event.

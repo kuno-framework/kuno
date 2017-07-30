@@ -39,7 +39,7 @@ namespace Kuno.Services.Pipeline
 
             if (message.Body != null)
             {
-                var validator = (IMessageValidator) _components.Resolve(typeof(MessageValidator<>).MakeGenericType(context.EndPoint.RequestType));
+                var validator = (IMessageValidator) _components.Resolve(typeof(MessageValidator<>).MakeGenericType(context.Function.RequestType));
                 var results = await validator.Validate(message, context).ConfigureAwait(false);
                 context.AddValidationErrors(results);
             }

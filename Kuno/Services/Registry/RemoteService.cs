@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace Kuno.Services.Inventory
+namespace Kuno.Services.Registry
 {
     /// <summary>
     /// An external service that is available to consume.

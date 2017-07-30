@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Logging;
 using Kuno.Services.Messaging;
 using Kuno.Services.Pipeline;
@@ -62,7 +62,7 @@ namespace Kuno.Services.Modules
                 .Where(e => e.GetInterfaces().Any(x => x == typeof(IMessageExecutionStep)))
                 .AsSelf();
 
-            builder.RegisterType<ServiceInventory>()
+            builder.RegisterType<ServiceRegistry>()
                 .AsSelf()
                 .SingleInstance()
                 .OnActivated(e =>

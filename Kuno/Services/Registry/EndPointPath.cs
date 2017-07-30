@@ -1,9 +1,16 @@
+/* 
+ * Copyright (c) Kuno Contributors
+ * 
+ * This file is subject to the terms and conditions defined in
+ * the LICENSE file, which is part of this source code package.
+ */
+
 using System;
 using System.Text.RegularExpressions;
 
-namespace Kuno.Services.Inventory
+namespace Kuno.Services.Registry
 {
-    public class EndPointPath : IComparable
+    internal class EndPointPath : IComparable
     {
         public bool IsSystemPath => this.Path?.StartsWith("_") == true;
 

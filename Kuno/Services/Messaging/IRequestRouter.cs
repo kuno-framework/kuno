@@ -7,12 +7,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 
 namespace Kuno.Services.Messaging
 {
     /// <summary>
-    /// Routes requests locally, or within the current process.
+    /// Routes requests locally within the current process.
     /// </summary>
     public interface IRequestRouter
     {
@@ -24,6 +24,6 @@ namespace Kuno.Services.Messaging
         /// <param name="parentContext">The parent context.</param>
         /// <param name="timeout">The timeout.</param>
         /// <returns>Returns a task for asynchronous programming.</returns>
-        Task<MessageResult> Route(Request request, EndPointMetaData endPoint, ExecutionContext parentContext, TimeSpan? timeout = null);
+        Task<MessageResult> Route(Request request, FunctionInfo endPoint, ExecutionContext parentContext, TimeSpan? timeout = null);
     }
 }

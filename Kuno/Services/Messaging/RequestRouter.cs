@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Newtonsoft.Json;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Pipeline;
 
 namespace Kuno.Services.Messaging
@@ -35,21 +35,21 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public virtual async Task<MessageResult> Route(Request request, EndPointMetaData endPoint, ExecutionContext parentContext, TimeSpan? timeout = null)
+        public virtual async Task<MessageResult> Route(Request request, FunctionInfo function, ExecutionContext parentContext, TimeSpan? timeout = null)
         {
             CancellationTokenSource source;
-            if (timeout.HasValue || endPoint.Timeout.HasValue)
-            {
-                source = new CancellationTokenSource(timeout ?? endPoint.Timeout.Value);
-            }
-            else
-            {
+            //if (timeout.HasValue || endPoint.Timeout.HasValue)
+            //{
+            //    source = new CancellationTokenSource(timeout ?? endPoint.Timeout.Value);
+            //}
+            //else
+            //{
                 source = new CancellationTokenSource();
-            }
+            //}
 
-            var context = new ExecutionContext(request, endPoint, source.Token, parentContext);
+            var context = new ExecutionContext(request, function, source.Token, parentContext);
 
-            var handler = _components.Resolve(endPoint.EndPointType);
+            var handler = _components.Resolve(function.FunctionType);
             var service = handler as IFunction;
             if (service != null)
             {
@@ -57,13 +57,13 @@ namespace Kuno.Services.Messaging
             }
 
             object body = request.Message.Body;
-            var parameterType = endPoint.InvokeMethod.GetParameters().First().ParameterType;
+            var parameterType = function.ReceiveMethod.GetParameters().First().ParameterType;
             if (request.Message.Body == null || request.Message.Body.GetType() != parameterType)
             {
                 body = JsonConvert.DeserializeObject(request.Message.Body, parameterType);
             }
 
-            await ((Task)endPoint.InvokeMethod.Invoke(handler, new[] { body })).ConfigureAwait(false);
+            await ((Task)function.ReceiveMethod.Invoke(handler, new[] { body })).ConfigureAwait(false);
 
             await this.Complete(context).ConfigureAwait(false);
 

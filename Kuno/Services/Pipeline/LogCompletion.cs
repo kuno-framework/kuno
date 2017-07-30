@@ -45,7 +45,7 @@ namespace Kuno.Services.Pipeline
                 return Task.FromResult(0);
             }
 
-            var tasks = new List<Task> {_actions.Append(new ResponseEntry(context, _environmentContext))};
+            var tasks = new List<Task> { _actions.Append(new ResponseEntry(context, _environmentContext)) };
 
             var name = context.Request.Path ?? context.Request.Message.Name;
             if (!context.IsSuccessful)

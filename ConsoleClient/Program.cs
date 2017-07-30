@@ -1,10 +1,13 @@
 ﻿using System;
+using Autofac;
 using Kuno;
 using Kuno.Services;
 using Kuno.Text;
 using Kuno.Services.Messaging;
 using Newtonsoft.Json;
 using Kuno.Serialization;
+using Kuno.Services.Registry;
+using Kuno.Services.Services;
 
 namespace ConsoleClient
 {
@@ -18,11 +21,23 @@ namespace ConsoleClient
         public string FirstName { get; set; } = "s";
     }
 
+    [Subscribe("SomeEvent"), EndPoint("aa", Version = 2)]
     public class R : Function<SomeEvent>
     {
         public override void Receive(SomeEvent instance)
         {
             Console.WriteLine(instance);
+            Console.WriteLine("A");
+        }
+    }
+
+    [Subscribe("SomeEvent2"), EndPoint("aa", Version = 3)]
+    public class R2 : Function<SomeEvent>
+    {
+        public override void Receive(SomeEvent instance)
+        {
+            this.AddRaisedEvent(new SomeEvent());
+            Console.WriteLine("B");
         }
     }
 
@@ -32,7 +47,8 @@ namespace ConsoleClient
         {
             using (var stack = new KunoStack())
             {
-                stack.Publish(new SomeEvent());
+
+                stack.Send(new GetOpenApiRequest("localhost", all: true)).Result.OutputToJson();
             }
         }
     }

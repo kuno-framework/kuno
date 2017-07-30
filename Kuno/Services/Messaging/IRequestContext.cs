@@ -5,7 +5,7 @@
  * the LICENSE file, which is part of this source code package.
  */
 
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 
 namespace Kuno.Services.Messaging
 {
@@ -21,7 +21,7 @@ namespace Kuno.Services.Messaging
         /// <param name="endPoint">The endpoint.</param>
         /// <param name="parent">The parent.</param>
         /// <returns>The current request.</returns>
-        Request Resolve(object message, EndPointMetaData endPoint, Request parent = null);
+        Request Resolve(object message, FunctionInfo endPoint, Request parent = null);
 
         /// <summary>
         /// Resolves the current request.
@@ -30,7 +30,7 @@ namespace Kuno.Services.Messaging
         /// <param name="endPoint">The endpoint.</param>
         /// <param name="parent">The parent.</param>
         /// <returns>The current request.</returns>
-        Request Resolve(string path, EndPointMetaData endPoint, Request parent = null);
+        Request Resolve(string path, FunctionInfo endPoint, Request parent = null);
 
         /// <summary>
         /// Resolves the current request.

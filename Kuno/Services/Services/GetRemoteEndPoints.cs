@@ -6,7 +6,7 @@
  */
 
 using System.Linq;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Validation;
 
 namespace Kuno.Services.Services

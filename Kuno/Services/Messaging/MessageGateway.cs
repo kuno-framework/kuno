@@ -13,7 +13,7 @@ using Autofac;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Kuno.Reflection;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Logging;
 using Kuno.Utilities.NewId;
 using Kuno.Validation;
@@ -25,11 +25,11 @@ namespace Kuno.Services.Messaging
     /// </summary>
     public class MessageGateway : IMessageGateway
     {
-        private readonly Lazy<IRequestRouter> _dispatcher;
+        private readonly Lazy<IRequestRouter> _router;
         private readonly Lazy<IEnumerable<IRemoteRouter>> _dispatchers;
         private readonly Lazy<IRequestContext> _requestContext;
         private readonly Lazy<IRequestLog> _requests;
-        private readonly Lazy<ServiceInventory> _services;
+        private readonly Lazy<ServiceRegistry> _services;
         private readonly Lazy<IEnumerable<IEventPublisher>> _publishers;
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace Kuno.Services.Messaging
         {
             Argument.NotNull(components, nameof(components));
 
-            _services = new Lazy<ServiceInventory>(components.Resolve<ServiceInventory>);
+            _services = new Lazy<ServiceRegistry>(components.Resolve<ServiceRegistry>);
             _requestContext = new Lazy<IRequestContext>(components.Resolve<IRequestContext>);
             _requests = new Lazy<IRequestLog>(components.Resolve<IRequestLog>);
-            _dispatcher = new Lazy<IRequestRouter>(components.Resolve<IRequestRouter>);
+            _router = new Lazy<IRequestRouter>(components.Resolve<IRequestRouter>);
             _dispatchers = new Lazy<IEnumerable<IRemoteRouter>>(components.ResolveAll<IRemoteRouter>);
             _publishers = new Lazy<IEnumerable<IEventPublisher>>(components.ResolveAll<IEventPublisher>);
         }
@@ -56,21 +56,10 @@ namespace Kuno.Services.Messaging
             var request = _requestContext.Value.Resolve(instance, context?.Request);
             await this.LogRequest(request).ConfigureAwait(false);
 
-            var endPoints = _services.Value.Find(instance);
-            foreach (var endPoint in endPoints)
+            var subscriptions = _services.Value.Subscriptions.Find(instance);
+            foreach (var subscription in subscriptions)
             {
-                if (endPoint.InvokeMethod.GetParameters().FirstOrDefault()?.ParameterType.FullName == instance.MessageType)
-                {
-                    await _dispatcher.Value.Route(request, endPoint, context).ConfigureAwait(false);
-                }
-                else
-                {
-                    var attribute = endPoint.EndPointType.GetAllAttributes<SubscribeAttribute>().FirstOrDefault();
-                    if (attribute != null && attribute.Channel == instance.Name)
-                    {
-                        await _dispatcher.Value.Route(request, endPoint, context).ConfigureAwait(false);
-                    }
-                }
+                await _router.Value.Route(request, subscription.Function, context).ConfigureAwait(false);
             }
 
             foreach (var publisher in _publishers.Value)
@@ -91,12 +80,14 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public void Publish(string channel, string message)
+        public async Task Publish(string channel, object message)
         {
             EventMessage current;
-            if (message.StartsWith("{"))
+            if ((message as string)?.StartsWith("{") == true)
             {
-                var instance = JsonConvert.DeserializeObject<JObject>(message);
+                var content = message as string;
+
+                var instance = JsonConvert.DeserializeObject<JObject>(content);
 
                 var requestId = instance["requestId"]?.Value<string>() ?? NewId.NextId();
                 var body = instance["body"]?.ToObject<object>() ?? instance;
@@ -105,19 +96,19 @@ namespace Kuno.Services.Messaging
             }
             else
             {
-                current = new EventMessage(NewId.NextId(), message);
+                current = new EventMessage(NewId.NextId(), message ?? "{}");
             }
 
-            foreach (var endPoint in _services.Value.EndPoints.Where(e => e.EndPointType.GetAllAttributes<SubscribeAttribute>().Any(x => x.Channel == channel)))
+            var subscriptions = _services.Value.Subscriptions.Find(channel);
+            foreach (var subscription in subscriptions)
             {
-                var request = _requestContext.Value.Resolve(current, endPoint);
-
-                _dispatcher.Value.Route(request, endPoint, null);
+                var request = _requestContext.Value.Resolve(current, subscription.Function);
+                await _router.Value.Route(request, subscription.Function, null).ConfigureAwait(false);
             }
 
             foreach (var publisher in _publishers.Value)
             {
-                publisher.Publish(current);
+                await publisher.Publish(current).ConfigureAwait(false);
             }
         }
 
@@ -126,11 +117,11 @@ namespace Kuno.Services.Messaging
         {
             var current = new EventMessage(NewId.NextId(), instance);
 
-            foreach (var endPoint in _services.Value.Find(current))
+            foreach (var endPoint in _services.Value.Subscriptions.Find(current))
             {
-                var request = _requestContext.Value.Resolve(current, endPoint);
+                var request = _requestContext.Value.Resolve(current, endPoint.Function);
 
-                _dispatcher.Value.Route(request, endPoint, null);
+                _router.Value.Route(request, endPoint.Function, null);
             }
 
             foreach (var publisher in _publishers.Value)
@@ -154,12 +145,12 @@ namespace Kuno.Services.Messaging
         /// <inheritdoc />
         public virtual async Task<MessageResult> Send(string path, object instance, ExecutionContext parentContext = null, TimeSpan? timeout = null)
         {
-            var endPoint = _services.Value.Find(path, instance);
+            var endPoint = _services.Value.EndPoints.Find(path, instance);
             if (endPoint != null)
             {
-                var request = _requestContext.Value.Resolve(instance, endPoint, parentContext?.Request);
+                var request = _requestContext.Value.Resolve(instance, endPoint.Function, parentContext?.Request);
                 await this.LogRequest(request).ConfigureAwait(false);
-                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout).ConfigureAwait(false);
+                return await _router.Value.Route(request, endPoint.Function, parentContext, timeout).ConfigureAwait(false);
             }
             else
             {
@@ -181,12 +172,12 @@ namespace Kuno.Services.Messaging
         /// <inheritdoc />
         public virtual async Task<MessageResult> Send(string path, string command, ExecutionContext parentContext = null, TimeSpan? timeout = null)
         {
-            var endPoint = _services.Value.Find(path);
+            var endPoint = _services.Value.EndPoints.Find(path);
             if (endPoint != null)
             {
-                var request = _requestContext.Value.Resolve(command, endPoint, parentContext?.Request);
+                var request = _requestContext.Value.Resolve(command, endPoint.Function, parentContext?.Request);
                 await this.LogRequest(request).ConfigureAwait(false);
-                return await _dispatcher.Value.Route(request, endPoint, parentContext, timeout).ConfigureAwait(false);
+                return await _router.Value.Route(request, endPoint.Function, parentContext, timeout).ConfigureAwait(false);
             }
             else
             {

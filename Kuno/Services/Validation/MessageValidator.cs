@@ -42,10 +42,11 @@ namespace Kuno.Services.Validation
         {
             Argument.NotNull(message, nameof(message));
 
-            if (context.EndPoint.Secure && !(context.Request.User?.Identity?.IsAuthenticated ?? false))
-            {
-                return Task.FromResult(new[] { new ValidationError("Unauthorized", "The call to \"" + context.Request.Path + "\" requires authentication.", ValidationType.Security) }.AsEnumerable());
-            }
+            // TODO: Replace
+            //if (context.Function.Secure && !(context.Request.User?.Identity?.IsAuthenticated ?? false))
+            //{
+            //    return Task.FromResult(new[] { new ValidationError("Unauthorized", "The call to \"" + context.Request.Path + "\" requires authentication.", ValidationType.Security) }.AsEnumerable());
+            //}
 
             var instance = message.GetBody<TCommand>();
 
@@ -103,7 +104,7 @@ namespace Kuno.Services.Validation
         protected virtual IEnumerable<ValidationError> CheckInputRules(TCommand command)
         {
             var target = new List<ValidationError>();
-            foreach (var property in command.GetType().GetProperties())
+            foreach (var property in typeof(TCommand).GetProperties())
             {
                 target.AddRange(this.CheckRules(property, () => property.GetValue(command)));
             }

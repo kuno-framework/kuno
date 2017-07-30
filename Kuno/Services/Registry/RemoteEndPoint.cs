@@ -5,7 +5,7 @@
  * the LICENSE file, which is part of this source code package.
  */
 
-namespace Kuno.Services.Inventory
+namespace Kuno.Services.Registry
 {
     /// <summary>
     /// An available endpoint in a remote service.

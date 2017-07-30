@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Logging;
 using Kuno.Validation;
 
@@ -27,13 +27,13 @@ namespace Kuno.Services.Messaging
         /// Initializes a new instance of the <see cref="ExecutionContext" /> class.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="endPoint">The current endpoint.</param>
-        /// <param name="cancellationToken">The cancellation.</param>
+        /// <param name="function">The current function.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="parent">The parent.</param>
-        public ExecutionContext(Request request, EndPointMetaData endPoint, CancellationToken cancellationToken, ExecutionContext parent = null)
+        public ExecutionContext(Request request, FunctionInfo function, CancellationToken cancellationToken, ExecutionContext parent = null)
         {
             this.Request = request;
-            this.EndPoint = endPoint;
+            this.Function = function;
             this.Parent = parent;
             this.CancellationToken = cancellationToken;
         }
@@ -62,11 +62,7 @@ namespace Kuno.Services.Messaging
         /// <value>The date and time that execution completed.</value>
         public DateTimeOffset? Completed { get; private set; }
 
-        /// <summary>
-        /// Gets the registry entry.
-        /// </summary>
-        /// <value>The registry entry.</value>
-        public EndPointMetaData EndPoint { get; private set; }
+        public FunctionInfo Function { get; private set; }
 
         /// <summary>
         /// Gets the raised exception, if any.

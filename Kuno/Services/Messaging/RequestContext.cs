@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using Kuno.Reflection;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Utilities.NewId;
 
 namespace Kuno.Services.Messaging
@@ -22,7 +22,7 @@ namespace Kuno.Services.Messaging
         private string _sessionId;
 
         /// <inheritdoc />
-        public Request Resolve(object message, EndPointMetaData endPoint, Request parent = null)
+        public Request Resolve(object message, FunctionInfo endPoint, Request parent = null)
         {
             return new Request
             {
@@ -31,7 +31,7 @@ namespace Kuno.Services.Messaging
                 SessionId = parent?.SessionId ?? this.GetSession(),
                 User = parent?.User ?? this.GetUser(),
                 Parent = parent,
-                Path = endPoint.Path,
+                //Path = endPoint.Path,
                 Message = this.GetMessage(message, endPoint)
             };
         }
@@ -52,7 +52,7 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public Request Resolve(string command, EndPointMetaData endPoint, Request parent = null)
+        public Request Resolve(string command, FunctionInfo endPoint, Request parent = null)
         {
             return new Request
             {
@@ -61,7 +61,7 @@ namespace Kuno.Services.Messaging
                 SessionId = parent?.SessionId ?? this.GetSession(),
                 User = parent?.User ?? this.GetUser(),
                 Parent = parent,
-                Path = endPoint.Path,
+                //Path = endPoint.Path,
                 Message = this.GetMessage(command, endPoint)
             };
         }
@@ -126,35 +126,43 @@ namespace Kuno.Services.Messaging
             return message == null ? new Message() : new Message(message);
         }
 
-        private IMessage GetMessage(string message, EndPointMetaData endPoint)
+        private IMessage GetMessage(string message, EndPoint endPoint)
         {
             if (message == null)
             {
-                if (endPoint.RequestType != typeof(object))
+                if (endPoint.Function.RequestType != typeof(object))
                 {
-                    return new Message(JsonConvert.DeserializeObject("{}", endPoint.RequestType));
+                    return new Message(JsonConvert.DeserializeObject("{}", endPoint.Function.RequestType));
                 }
                 return new Message();
             }
-            return new Message(JsonConvert.DeserializeObject(message, endPoint.RequestType));
+            return new Message(JsonConvert.DeserializeObject(message, endPoint.Function.RequestType));
         }
 
-        private IMessage GetMessage(object message, EndPointMetaData endPoint)
+        private IMessage GetMessage(object message, FunctionInfo function)
         {
             if (message is IMessage)
             {
                 return message as IMessage;
             }
-            if (message != null && message.GetType() == endPoint.RequestType)
+            if (message != null && message.GetType() == function.RequestType)
             {
                 return new Message(message);
             }
             if (message != null)
             {
-                var content = JsonConvert.SerializeObject((message as EventMessage)?.Body ?? message);
-                return new Message(JsonConvert.DeserializeObject(content, endPoint.RequestType));
+                string content;
+                if (message is string)
+                {
+                    content = message as string;
+                }
+                else
+                {
+                    content = JsonConvert.SerializeObject((message as EventMessage)?.Body ?? message);
+                }
+                return new Message(JsonConvert.DeserializeObject(content, function.RequestType));
             }
-            return new Message(JsonConvert.DeserializeObject("{}", endPoint.RequestType));
+            return new Message(JsonConvert.DeserializeObject("{}", function.RequestType));
         }
     }
 }

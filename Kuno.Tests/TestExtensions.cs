@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Messaging;
 using Kuno.Validation;
 
@@ -8,7 +8,7 @@ namespace Kuno.Tests
 {
     public static class TestExtensions
     {
-        public static void ShouldBeSecure(this EndPointMetaData endpoint)
+        public static void ShouldBeSecure(this FunctionInfo endpoint)
         {
             endpoint.Rules.Should().Contain(e => e.RuleType == ValidationType.Security);
         }

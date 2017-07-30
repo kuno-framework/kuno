@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.Messaging;
 using ExecutionContext = Kuno.Services.Messaging.ExecutionContext;
 
@@ -31,7 +31,7 @@ namespace Kuno.Tests
         {
         }
 
-        public override Task<MessageResult> Route(Request request, EndPointMetaData endPoint, ExecutionContext parentContext, TimeSpan? timeout = null)
+        public override Task<MessageResult> Route(Request request, FunctionInfo endPoint, ExecutionContext parentContext, TimeSpan? timeout = null)
         {
             if (request.Message.MessageType != null && _endPoints.ContainsKey(request.Message.MessageType))
             {

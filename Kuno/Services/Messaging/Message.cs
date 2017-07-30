@@ -11,14 +11,6 @@ using Newtonsoft.Json;
 
 namespace Kuno.Services.Messaging
 {
-    public static class MessageExtensions
-    {
-        public static T GetBody<T>(this IMessage instance)
-        {
-            return JsonConvert.DeserializeObject<T>(instance.Body, DefaultSerializationSettings.Instance);
-        }
-    }
-
     /// <summary>
     /// An atomic packet of data that is transmitted through a message channel.
     /// </summary>
@@ -34,7 +26,14 @@ namespace Kuno.Services.Messaging
 
             var type = body.GetType();
 
-            this.Body = JsonConvert.SerializeObject(body, DefaultSerializationSettings.Instance);
+            if (type == typeof(string))
+            {
+                this.Body = (string)body;
+            }
+            else
+            {
+                this.Body = JsonConvert.SerializeObject(body, DefaultSerializationSettings.Instance);
+            }
             this.MessageType = type.FullName;
             this.Name = type.Name;
         }

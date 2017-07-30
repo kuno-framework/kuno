@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Kuno.Reflection;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Validation;
 
 namespace Kuno.Services

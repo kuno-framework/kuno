@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Kuno.Services.Inventory;
+using Kuno.Services.Registry;
 using Kuno.Services.OpenApi;
 
 namespace Kuno.Services.Services
@@ -14,7 +14,7 @@ namespace Kuno.Services.Services
     [EndPoint("_system/api", Method = "GET", Name = "Get OpenAPI Definition", Public = false)]
     public class GetOpenApi : Function<GetOpenApiRequest, OpenApiDocument>
     {
-        private readonly ServiceInventory _services;
+        private readonly ServiceRegistry _services;
         private readonly IConfiguration _configuration;
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Kuno.Services.Services
         /// </summary>
         /// <param name="services">The configured services.</param>
         /// <param name="configuration">The configuration.</param>
-        public GetOpenApi(ServiceInventory services, IConfiguration configuration)
+        public GetOpenApi(ServiceRegistry services, IConfiguration configuration)
         {
             _services = services;
             _configuration = configuration;
