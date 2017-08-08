@@ -1,0 +1,86 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "entityFramework": {
+      "description": "Options for Entity Framework.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Settings for Entity Framework domain data.",
+          "properties": {
+            "enableMigrations": {
+              "default": false,
+              "description": "Indicates whether or not EF code first migrations should apply.",
+              "title": "Enable Migrations",
+              "type": "boolean"
+            },
+            "connectionString": {
+              "default": "Data Source=.;Initial Catalog=Stacks;Integrated Security=True;MultipleActiveResultSets=True",
+              "description": "The connection string for entities and aggregates.",
+              "title": "Data Connection String",
+              "type": "string"
+            },
+
+            "autoDetectChangesEnabled": {
+              "default": "false",
+              "description": "Indicates whether the DetectChanges method is called automatically by methods.",
+              "title": "Auto Detect Changes Enabled",
+              "type": "boolean"
+            },
+
+            "lazyLoadingEnabled": {
+              "default": "false",
+              "description": "Indicates whether lazy loading of relationships exposed as navigation properties is enabled.",
+              "title": "Lazy Loading Enabled",
+              "type": "boolean"
+            },
+
+            "proxyCreationEnabled": {
+              "default": "false",
+              "description": "Indicates whether or not the framework will create instances of dynamically generated proxy classes whenever it creates an instance of an entity type.",
+              "title": "Proxy Creation Enabled",
+              "type": "boolean"
+            },
+            "validateOnSaveEnabled": {
+              "default": "false",
+              "description": "Indicates whether tracked entities should be validated automatically when SaveChanges is invoked.",
+              "title": "Validate On Save Enabled",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "search": {
+          "description": "Settings for Entity Framework search.",
+          "properties": {
+            "enableMigrations": {
+              "default": false,
+              "description": "Indicates whether or not EF code first migrations should apply.",
+              "title": "Enable Migrations",
+              "type": "boolean"
+            },
+            "connectionString": {
+              "default": "Data Source=.;Initial Catalog=Stacks.Search;Integrated Security=True;MultipleActiveResultSets=True",
+              "description": "The connection string for search.",
+              "title": "Search  Connection String",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      }
+    }
+  },
+  "properties": {
+    "stacks": {
+      "description": "The root configuraiton object for Stacks.",
+      "properties": {
+        "entityFramework": {
+          "$ref": "#/definitions/entityFramework"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "type": "object"
+}

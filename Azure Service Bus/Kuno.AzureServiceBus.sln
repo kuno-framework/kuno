@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kuno.AzureServiceBus", "Kuno.AzureServiceBus\Kuno.AzureServiceBus.csproj", "{39229DFD-F1B7-4232-A35B-A8C0FDD4F52C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{CA5A16AB-C84F-4178-AF1E-E861ADA67312}"
+	ProjectSection(SolutionItems) = preProject
+		assets\clean.ps1 = assets\clean.ps1
+		assets\package.ps1 = assets\package.ps1
+		assets\sonar-build.ps1 = assets\sonar-build.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{686A9D11-9FEA-47EE-A64A-8D834DAAC68F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39229DFD-F1B7-4232-A35B-A8C0FDD4F52C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39229DFD-F1B7-4232-A35B-A8C0FDD4F52C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39229DFD-F1B7-4232-A35B-A8C0FDD4F52C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39229DFD-F1B7-4232-A35B-A8C0FDD4F52C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{686A9D11-9FEA-47EE-A64A-8D834DAAC68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686A9D11-9FEA-47EE-A64A-8D834DAAC68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686A9D11-9FEA-47EE-A64A-8D834DAAC68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686A9D11-9FEA-47EE-A64A-8D834DAAC68F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,56 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Configuration for Kuno Azure Service Bus.",
+  "definitions": {
+    "azureServiceBus": {
+      "type": "object",
+      "description": "Settings for Kuno Azure Service Bus.",
+      "properties": {
+        "connectionString": {
+          "description": "The connection string to the Azure Service Bus instance.",
+          "type": "string"
+        },
+        "eventPublisher": {
+          "description": "The topic event publisher settings.",
+          "type": "object",
+          "properties": {
+            "topicName": {
+              "type": "string",
+              "description": "The name of the topic.",
+              "default": "Events"
+            }
+          }
+        },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topicName": {
+                "type": "string",
+                "description": "The name of the topic.",
+              },
+              "subscriptionName": {
+                "type": "string",
+                "description": "The name of the subscription."
+              }
+            },
+            "required": ["topicName", "subscriptionName"]
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "kuno": {
+      "type": "object",
+      "description": "The root configuration object for Kuno.",
+      "properties": {
+        "azureServiceBus": {
+          "$ref": "#/definitions/azureServiceBus"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <Version>1.0.0</Version>
+    <Authors>Kuno Contributors</Authors>
+    <Company />
+    <Product>Kuno Framework</Product>
+    <Description>Contains components to map and persist domain objects using Kuno and SQL Server with Entity Framework.</Description>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/kuno-framework/kuno/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>http://docs.kuno.io/</PackageProjectUrl>
+    <PackageIconUrl>http://docs.kuno.io/assets/icons/icon-128x128.png</PackageIconUrl>
+    <PackageTags>kuno;entity framework;sql;</PackageTags>
+    <Copyright>Copyright ©  Kuno Contributors</Copyright>
+    <RepositoryUrl>https://github.com/kuno-framework/kuno</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.1.3" />
+    <PackageReference Include="Inflector" Version="1.0.0" />
+    <PackageReference Include="Kuno" Version="0.0.8" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>core</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net461\Kuno.EntityFramework.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

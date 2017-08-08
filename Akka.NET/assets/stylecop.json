@@ -1,0 +1,13 @@
+﻿{
+  "settings": {
+    "documentationRules": {
+      "headerDecoration": "false"
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    },
+    "readabilityRules": {
+      
+    }
+  }
+}

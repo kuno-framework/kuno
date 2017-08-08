@@ -1,0 +1,10 @@
+﻿{
+  "kuno": {
+    "aspnetCore": {
+      "apiKeyAuthentication": {
+        "allow": true,
+        "key": "Kuno"
+      }
+    }
+  }
+}

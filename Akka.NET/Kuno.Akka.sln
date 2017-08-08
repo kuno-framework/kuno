@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{597124B3-9A03-49AC-AE9B-0C68601DCAFE}"
+	ProjectSection(SolutionItems) = preProject
+		assets\package.ps1 = assets\package.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{04933F0A-35D2-4949-84F8-696B41B46D47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kuno.Akka", "Kuno.Akka\Kuno.Akka.csproj", "{81E79A85-9CF9-465E-A75B-B9E8BAA19D59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{8D8822C7-324A-431E-A8DC-6C69955DE262}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81E79A85-9CF9-465E-A75B-B9E8BAA19D59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E79A85-9CF9-465E-A75B-B9E8BAA19D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E79A85-9CF9-465E-A75B-B9E8BAA19D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E79A85-9CF9-465E-A75B-B9E8BAA19D59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D8822C7-324A-431E-A8DC-6C69955DE262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8822C7-324A-431E-A8DC-6C69955DE262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8822C7-324A-431E-A8DC-6C69955DE262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8822C7-324A-431E-A8DC-6C69955DE262}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8D8822C7-324A-431E-A8DC-6C69955DE262} = {04933F0A-35D2-4949-84F8-696B41B46D47}
+	EndGlobalSection
+EndGlobal

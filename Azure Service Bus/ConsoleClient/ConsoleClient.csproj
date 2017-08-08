@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net461</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kuno.AzureServiceBus\Kuno.AzureServiceBus.csproj" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties kuno_1json__JSONSchema="..\Kuno.AzureServiceBus\schema.json" /></VisualStudio></ProjectExtensions>
+
+</Project>

@@ -1,0 +1,16 @@
+﻿{
+  "kuno": {
+    "azureServiceBus": {
+      "connectionString": "Endpoint=sb://arch-patolus-servicebus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=nf+u1qDOvVISKRvHp+LrB6srLgEe7FfLClaWsuMz4aQ=",
+      "eventPublisher": {
+        "topicName": "Another"
+      },
+      "subscriptions": [
+        {
+          "subscriptionName": "Sub1",
+          "topicName": "Another"
+        }
+      ]
+    }
+  }
+}

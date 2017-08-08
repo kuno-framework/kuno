@@ -1,0 +1,103 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "kuno": {
+      "type": "object",
+      "description": "The root configuration object for Kuno",
+      "properties": {
+        "aspnetCore": {
+          "$ref": "#/definitions/aspnetCore"
+        }
+      }
+    },
+    "aspnetCore": {
+      "description": "Configuration object for Kuno AspNetCore.",
+      "properties": {
+        "cookieAuthentication": {
+          "$ref": "#/definitions/cookieAuthentication"
+        },
+        "subscriptions": {
+          "$ref": "#/definitions/subscriptions"
+        },
+        "apiKeyAuthentication": {
+          "$ref": "#/definitions/apiKeyAuthentication"
+        }
+      },
+      "type": "object"
+    },
+    "cookieAuthentication": {
+      "description": "Options for integrated cookie authentication.  All nodes in the collection will use these cookies and must share a domain name.  One service must create the auth tickets.",
+      "properties": {
+        "authenticationScheme": {
+          "default": "Cookies",
+          "description": "The name of the authentication scheme.",
+          "title": "Authentication Scheme",
+          "type": "string"
+        },
+        "cookieName": {
+          "default": ".AspNetCore.Cookies",
+          "description": "The authentication cookie name.",
+          "title": "Cookie Name",
+          "type": "string"
+        },
+        "dataProtectionKey": {
+          "default": "Kuno",
+          "description": "A key that is used to encrypt the cookie",
+          "title": "Data Protectin Key",
+          "type": "string"
+        },
+        "expireTimeSpan": {
+          "default": "00:15:00",
+          "description": "The sliding expiration of the cookie.",
+          "title": "Expiration",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "subscriptions": {
+      "description": "An subscriptions that this instance should connect to.",
+      "type": "object",
+      "properties": {
+        "local": {
+          "description": "The local URL of this service.  This is the URL that the publisher will call.  Do not include the path.",
+          "title": "Local URL",
+          "type": "string",
+          "format": "uri"
+        },
+        "remote": {
+          "description": "The remote URLs to subscribe to.",
+          "items": {
+            "title": "Remote URLs",
+            "type": "string",
+            "format": "uri"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "apiKeyAuthentication": {
+      "description": "Options to enable API key authentication.",
+      "properties": {
+        "allow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Set to true to allow API key authentication."
+        },
+        "key": {
+          "type": "string",
+          "default": "A key to decrypt the header value."
+        }
+      },
+      "required": [ "allow", "key" ],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "kuno": {
+      "$ref": "#/definitions/kuno"
+    }
+  },
+  "type": "object"
+}
