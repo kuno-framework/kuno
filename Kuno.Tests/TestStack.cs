@@ -70,7 +70,7 @@ namespace Kuno.Tests
             var attribute = method.GetCustomAttributes<GivenAttribute>().FirstOrDefault();
             if (attribute != null)
             {
-                var scenario = (Scenario)Activator.CreateInstance(attribute.Name);
+                var scenario = (Scenario)Activator.CreateInstance(attribute.Scenario);
                 this.UseScenario(scenario);
             }
 
@@ -83,7 +83,7 @@ namespace Kuno.Tests
             var attribute = method.GetCustomAttributes<GivenAttribute>().FirstOrDefault();
             if (attribute != null)
             {
-                var scenario = (Scenario)Activator.CreateInstance(attribute.Name);
+                var scenario = (Scenario)Activator.CreateInstance(attribute.Scenario);
                 this.UseScenario(scenario);
             }
             this.Container.Update(e => e.RegisterType<TestRequestContext>().AsSelf().AsImplementedInterfaces().SingleInstance());

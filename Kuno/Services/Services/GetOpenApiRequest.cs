@@ -13,10 +13,12 @@ namespace Kuno.Services.Services
         /// <param name="host">The host name to display in the document.</param>
         /// <param name="basePath">The base path on which the API is served.</param>
         /// <param name="all"><c>true</c> if all endpoints should be retrieved; otherwise, <c>false</c>.</param>
-        public GetOpenApiRequest(string host, string basePath = null, bool all = false)
+        /// <param name="versions"><c>true</c> if versioned endpoints should be retrieved; otherwise, <c>false</c>.</param>
+        public GetOpenApiRequest(string host, string basePath = null, bool all = false, bool versions = false)
         {
             this.Host = host;
             this.All = all;
+            this.Versions = versions;
             this.BasePath = basePath;
         }
 
@@ -43,5 +45,13 @@ namespace Kuno.Services.Services
         /// The host name to display in the document.
         /// </value>
         public string Host { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether versioned endpoints should be retrieved.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if versioned endpoints should be retrieved; otherwise, <c>false</c>.
+        /// </value>
+        public bool Versions { get; }
     }
 }

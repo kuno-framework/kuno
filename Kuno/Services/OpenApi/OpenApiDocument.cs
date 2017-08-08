@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Kuno.Configuration;
 using Kuno.Services.Registry;
 using Kuno.Text;
@@ -32,7 +33,7 @@ namespace Kuno.Services.OpenApi
         /// </value>
         public IDictionary<string, SecurityScheme> SecurityDefinitions { get; set; } = new SortedDictionary<string, SecurityScheme>
         {
-            { "api_key", new SecurityScheme { Type = "apiKey", Name="api_key", In = "header" } }
+            { "api_key", new SecurityScheme { Type = "apiKey", Name = "api_key", In = "header" } }
         };
 
         /// <summary>
@@ -112,28 +113,43 @@ namespace Kuno.Services.OpenApi
         /// </summary>
         /// <param name="services">The service inventory.</param>
         /// <param name="includeAll">Indicates whether all endpoints should be retreived or just public.</param>
-        public void Load(ServiceRegistry services, bool includeAll = false)
+        /// <param name="versions">Indicates whether versioned paths should be returned.</param>
+        public void Load(ServiceRegistry services, bool includeAll = false, bool versions = false)
         {
             this.Info = services.ApplicationInformation;
-            var endPoints = services.EndPoints.Where(e => includeAll || e.Path?.StartsWith("_") == false).ToList();
-            foreach (var endPoint in endPoints)
+            var endPoints = services.EndPoints.Where(e => includeAll || e.Public).ToList();
+            foreach (var group in endPoints.GroupBy(e => e.Path))
             {
-                if (endPoint.Function.RequestType != null)
+                foreach (var endPoint in group)
                 {
-                    this.Definitions.GetOrAdd(endPoint.Function.RequestType);
-                }
-                if (endPoint.Function.ResponseType != null)
-                {
-                    this.Definitions.GetOrAdd(endPoint.Function.ResponseType);
-                }
-
-                if (endPoint.Path != null)
-                {
-                    this.Paths.Add("/" + endPoint.VersionedPath, new PathItem
+                    if (endPoint.Function.RequestType != null)
                     {
-                        Post = this.GetPostOperation(endPoint),
-                        Get = this.GetGetOperation(endPoint)
-                    });
+                        this.Definitions.GetOrAdd(endPoint.Function.RequestType);
+                    }
+                    if (endPoint.Function.ResponseType != null)
+                    {
+                        this.Definitions.GetOrAdd(endPoint.Function.ResponseType);
+                    }
+
+                    if (endPoint.Path != null)
+                    {
+                        if (versions)
+                        {
+                            this.Paths.Add("/" + endPoint.VersionedPath, new PathItem
+                            {
+                                Post = this.GetPostOperation(endPoint),
+                                Get = this.GetGetOperation(endPoint)
+                            });
+                        }
+                        else if (endPoint.Version == group.Max(e => e.Version))
+                        {
+                            this.Paths.Add("/" + endPoint.Path, new PathItem
+                            {
+                                Post = this.GetPostOperation(endPoint),
+                                Get = this.GetGetOperation(endPoint)
+                            });
+                        }
+                    }
                 }
             }
         }
@@ -165,7 +181,7 @@ namespace Kuno.Services.OpenApi
                     Description = endPoint.Function.Summary,
                     Consumes = new List<string> { "application/json" },
                     Produces = new List<string> { "application/json" },
-                    OperationId = NewId.NextId().Replace("-", ""),
+                    OperationId = this.GetName("GET_", endPoint),
                     Parameters = parameters,
                     Responses = this.GetResponses(endPoint)
                 };
@@ -185,6 +201,27 @@ namespace Kuno.Services.OpenApi
             return null;
         }
 
+        private readonly List<string> _usedNames = new List<string>();
+
+        private string GetName(string prefix, EndPoint endPoint)
+        {
+            var regex = new Regex("[^a-zA-Z0-9]");
+
+            var content = $"{prefix}_{regex.Replace(endPoint.Name, "")}_v{endPoint.Version}";
+
+            if (_usedNames.Contains(content))
+            {
+                int i = 0;
+                while (_usedNames.Contains(content + "_" + ++i))
+                {
+                }
+                content = content + "_" + i;
+            }
+            _usedNames.Add(content);
+            return content;
+
+        }
+
         private Operation GetPostOperation(EndPoint endPoint)
         {
             if (endPoint.HttpMethod == "POST")
@@ -196,7 +233,7 @@ namespace Kuno.Services.OpenApi
                     Description = endPoint.Function.Summary,
                     Consumes = new List<string> { "application/json" },
                     Produces = new List<string> { "application/json" },
-                    OperationId = NewId.NextId().Replace("-", ""),
+                    OperationId = this.GetName("POST_", endPoint),
                     Parameters = this.GetPostParameters(endPoint).ToList(),
                     Responses = this.GetResponses(endPoint)
                 };
@@ -349,7 +386,6 @@ namespace Kuno.Services.OpenApi
                 }
             }
         }
-
 
         private class PathComparer : IComparer<string>
         {

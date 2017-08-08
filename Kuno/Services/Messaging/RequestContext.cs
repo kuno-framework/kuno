@@ -22,7 +22,7 @@ namespace Kuno.Services.Messaging
         private string _sessionId;
 
         /// <inheritdoc />
-        public Request Resolve(object message, FunctionInfo endPoint, Request parent = null)
+        public Request Resolve(object message, EndPoint endPoint, Request parent = null)
         {
             return new Request
             {
@@ -31,8 +31,23 @@ namespace Kuno.Services.Messaging
                 SessionId = parent?.SessionId ?? this.GetSession(),
                 User = parent?.User ?? this.GetUser(),
                 Parent = parent,
-                //Path = endPoint.Path,
-                Message = this.GetMessage(message, endPoint)
+                Path = endPoint.Path,
+                Message = this.GetMessage(message, endPoint.Function)
+            };
+        }
+
+        /// <inheritdoc />
+        public Request Resolve(object message, Subscription subscription, Request parent = null)
+        {
+            return new Request
+            {
+                CorrelationId = parent?.CorrelationId ?? this.GetCorrelationId(),
+                SourceAddress = parent?.SourceAddress ?? this.GetSourceIPAddress(),
+                SessionId = parent?.SessionId ?? this.GetSession(),
+                User = parent?.User ?? this.GetUser(),
+                Parent = parent,
+                Channel = subscription.Channel,
+                Message = this.GetMessage(message, subscription.Function)
             };
         }
 
@@ -52,7 +67,7 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public Request Resolve(string command, FunctionInfo endPoint, Request parent = null)
+        public Request Resolve(string path, EndPoint endPoint, Request parent = null)
         {
             return new Request
             {
@@ -61,8 +76,8 @@ namespace Kuno.Services.Messaging
                 SessionId = parent?.SessionId ?? this.GetSession(),
                 User = parent?.User ?? this.GetUser(),
                 Parent = parent,
-                //Path = endPoint.Path,
-                Message = this.GetMessage(command, endPoint)
+                Path = endPoint.Path,
+                Message = this.GetMessage(path, endPoint)
             };
         }
 
@@ -76,7 +91,8 @@ namespace Kuno.Services.Messaging
                 SessionId = parent?.SessionId,
                 User = parent?.User,
                 Parent = parent,
-                Message = instance
+                Message = instance,
+                Channel = instance.Name
             };
         }
 

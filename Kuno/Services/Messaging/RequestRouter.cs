@@ -57,10 +57,13 @@ namespace Kuno.Services.Messaging
             }
 
             object body = request.Message.Body;
-            var parameterType = function.ReceiveMethod.GetParameters().First().ParameterType;
-            if (request.Message.Body == null || request.Message.Body.GetType() != parameterType)
+            if (body != null)
             {
-                body = JsonConvert.DeserializeObject(request.Message.Body, parameterType);
+                var parameterType = function.ReceiveMethod.GetParameters().First().ParameterType;
+                if (request.Message.Body == null || request.Message.Body.GetType() != parameterType)
+                {
+                    body = JsonConvert.DeserializeObject(request.Message.Body, parameterType);
+                }
             }
 
             await ((Task)function.ReceiveMethod.Invoke(handler, new[] { body })).ConfigureAwait(false);

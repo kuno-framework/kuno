@@ -49,7 +49,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task Clear()
+        public virtual Task Clear()
         {
             this.Logger.Verbose($"Clearing all items of type {typeof(TRoot)} using {this.GetType().Name}:{_context.GetType().Name}.");
 
@@ -57,7 +57,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task<bool> Exists(Expression<Func<TRoot, bool>> expression)
+        public virtual Task<bool> Exists(Expression<Func<TRoot, bool>> expression)
         {
             Argument.NotNull(expression, nameof(expression));
 
@@ -67,7 +67,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<TRoot>> Find(Expression<Func<TRoot, bool>> expression)
+        public virtual Task<IEnumerable<TRoot>> Find(Expression<Func<TRoot, bool>> expression)
         {
             Argument.NotNull(expression, nameof(expression));
 
@@ -76,12 +76,8 @@ namespace Kuno.Domain
             return _context.Find(expression);
         }
 
-        /// <summary>
-        /// Finds the instance with the specified identifier.
-        /// </summary>
-        /// <param name="id">The instance identifier.</param>
-        /// <returns>A task for asynchronous programming.</returns>
-        public Task<TRoot> Find(string id)
+        /// <inheritdoc />
+        public virtual Task<TRoot> Find(string id)
         {
             this.Logger.Verbose($"Finding item of type {typeof(TRoot)} with ID {id} using {this.GetType().Name}:{_context.GetType().Name}.");
 
@@ -89,7 +85,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<TRoot>> Find()
+        public virtual Task<IEnumerable<TRoot>> Find()
         {
             this.Logger.Verbose($"Finding all items of type {typeof(TRoot)} using {this.GetType().Name}:{_context.GetType().Name}.");
 
@@ -97,7 +93,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task Remove(TRoot[] instances)
+        public virtual Task Remove(TRoot[] instances)
         {
             Argument.NotNull(instances, nameof(instances));
 
@@ -107,7 +103,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task Update(TRoot[] instances)
+        public virtual Task Update(TRoot[] instances)
         {
             Argument.NotNull(instances, nameof(instances));
 
@@ -117,7 +113,7 @@ namespace Kuno.Domain
         }
 
         /// <inheritdoc />
-        public Task<bool> Exists(string id)
+        public virtual Task<bool> Exists(string id)
         {
             Argument.NotNullOrWhiteSpace(id, nameof(id));
 

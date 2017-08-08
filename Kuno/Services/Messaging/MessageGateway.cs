@@ -102,7 +102,7 @@ namespace Kuno.Services.Messaging
             var subscriptions = _services.Value.Subscriptions.Find(channel);
             foreach (var subscription in subscriptions)
             {
-                var request = _requestContext.Value.Resolve(current, subscription.Function);
+                var request = _requestContext.Value.Resolve(current, subscription);
                 await _router.Value.Route(request, subscription.Function, null).ConfigureAwait(false);
             }
 
@@ -113,20 +113,20 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public void Publish(Event instance)
+        public async Task Publish(Event instance)
         {
             var current = new EventMessage(NewId.NextId(), instance);
 
             foreach (var endPoint in _services.Value.Subscriptions.Find(current))
             {
-                var request = _requestContext.Value.Resolve(current, endPoint.Function);
+                var request = _requestContext.Value.Resolve(current, endPoint);
 
-                _router.Value.Route(request, endPoint.Function, null);
+                await _router.Value.Route(request, endPoint.Function, null);
             }
 
             foreach (var publisher in _publishers.Value)
             {
-                publisher.Publish(current);
+                await publisher.Publish(current);
             }
         }
 
@@ -148,7 +148,7 @@ namespace Kuno.Services.Messaging
             var endPoint = _services.Value.EndPoints.Find(path, instance);
             if (endPoint != null)
             {
-                var request = _requestContext.Value.Resolve(instance, endPoint.Function, parentContext?.Request);
+                var request = _requestContext.Value.Resolve(instance, endPoint, parentContext?.Request);
                 await this.LogRequest(request).ConfigureAwait(false);
                 return await _router.Value.Route(request, endPoint.Function, parentContext, timeout).ConfigureAwait(false);
             }
@@ -170,18 +170,18 @@ namespace Kuno.Services.Messaging
         }
 
         /// <inheritdoc />
-        public virtual async Task<MessageResult> Send(string path, string command, ExecutionContext parentContext = null, TimeSpan? timeout = null)
+        public virtual async Task<MessageResult> Send(string path, string message, ExecutionContext parentContext = null, TimeSpan? timeout = null)
         {
             var endPoint = _services.Value.EndPoints.Find(path);
             if (endPoint != null)
             {
-                var request = _requestContext.Value.Resolve(command, endPoint.Function, parentContext?.Request);
+                var request = _requestContext.Value.Resolve(message, endPoint, parentContext?.Request);
                 await this.LogRequest(request).ConfigureAwait(false);
                 return await _router.Value.Route(request, endPoint.Function, parentContext, timeout).ConfigureAwait(false);
             }
             else
             {
-                var request = _requestContext.Value.Resolve(path, command, parentContext?.Request);
+                var request = _requestContext.Value.Resolve(path, message, parentContext?.Request);
                 await this.LogRequest(request).ConfigureAwait(false);
                 var dispatcher = _dispatchers.Value.FirstOrDefault(e => e.CanRoute(request));
                 if (dispatcher != null)
@@ -190,7 +190,7 @@ namespace Kuno.Services.Messaging
                 }
             }
 
-            var current = _requestContext.Value.Resolve(path, command);
+            var current = _requestContext.Value.Resolve(path, message);
             var context = new ExecutionContext(current, null);
             context.SetException(new EndPointNotFoundException(current));
             return new MessageResult(context);

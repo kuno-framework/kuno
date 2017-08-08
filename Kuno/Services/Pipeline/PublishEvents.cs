@@ -22,6 +22,7 @@ namespace Kuno.Services.Pipeline
     {
         private readonly IEventStore _eventStore;
         private readonly IMessageGateway _messageGateway;
+        private TaskRunner _tasks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PublishEvents" /> class.
@@ -31,6 +32,7 @@ namespace Kuno.Services.Pipeline
         {
             _messageGateway = components.Resolve<IMessageGateway>();
             _eventStore = components.Resolve<IEventStore>();
+            _tasks = components.Resolve<TaskRunner>();
         }
 
         /// <inheritdoc />
@@ -38,12 +40,14 @@ namespace Kuno.Services.Pipeline
         {
             if (context.IsSuccessful)
             {
-                var raisedEvents = context.RaisedEvents.Union(new[] {context.Response as EventMessage}).Where(e => e != null).ToArray();
+                var raisedEvents = context.RaisedEvents.Union(new[] { context.Response as EventMessage }).Where(e => e != null).ToArray();
                 foreach (var instance in raisedEvents)
                 {
                     await _eventStore.Append(instance).ConfigureAwait(false);
 
-                    await _messageGateway.Publish(instance, context).ConfigureAwait(false);
+#pragma warning disable 4014
+                    _tasks.Add(() => Task.Run(() => _messageGateway.Publish(instance, context)));
+#pragma warning restore 4014
                 }
             }
         }

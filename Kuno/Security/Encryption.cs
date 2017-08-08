@@ -256,163 +256,178 @@ namespace Kuno.Security
 
         #region Non-Public Methods
 
-        private static void SetValidKey(this SymmetricAlgorithm provider, string key)
-        {
-            key = key ?? "";
-            provider.GenerateKey();
-            provider.Key = Encoding.ASCII.GetBytes(key.Resize(provider.Key.Length, ' '));
-        }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        private static void SetValidIV(this SymmetricAlgorithm provider, string key)
-        {
-            key = key ?? "";
-            provider.GenerateIV();
-            provider.IV = Encoding.ASCII.GetBytes(key.Resize(provider.IV.Length, ' '));
-        }
-
         private static byte[] Encrypt(byte[] text, SymmetricAlgorithm provider, string key)
         {
-            var created = false;
-            try
+            byte[] encrypted;
+            byte[] IV;
+
+            using (Aes aesAlg = Aes.Create())
             {
-                if (provider == null)
-                {
-                    provider = Aes.Create();
-                    created = true;
-                }
-                provider.SetValidKey(key);
-                provider.SetValidIV(key);
-                provider.Padding = PaddingMode.None;
+                aesAlg.GenerateKey();
+                aesAlg.Key = Encoding.ASCII.GetBytes(key.Resize(aesAlg.Key.Length, ' ')); ;
 
+                aesAlg.GenerateIV();
+                IV = aesAlg.IV;
 
-                using (var memoryStream = new MemoryStream())
+                aesAlg.Mode = CipherMode.CBC;
+
+                var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption. 
+                using (var msEncrypt = new MemoryStream())
                 {
-                    var cryptoStream = new CryptoStream(memoryStream, provider.CreateEncryptor(), CryptoStreamMode.Write);
-                    cryptoStream.Write(text, 0, text.Length);
-                    cryptoStream.FlushFinalBlock();
-                    return memoryStream.ToArray();
+                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (var swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(text);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
                 }
             }
-            finally
-            {
-                if (created)
-                {
-                    provider.Dispose();
-                }
-            }
+
+            var combinedIvCt = new byte[IV.Length + encrypted.Length];
+            Array.Copy(IV, 0, combinedIvCt, 0, IV.Length);
+            Array.Copy(encrypted, 0, combinedIvCt, IV.Length, encrypted.Length);
+
+            return combinedIvCt;
         }
 
         private static string Encrypt(string text, SymmetricAlgorithm provider, string key)
         {
-            string target = null;
-            var created = false;
-            try
+            byte[] encrypted;
+            byte[] IV;
+
+            using (Aes aesAlg = Aes.Create())
             {
-                if (provider == null)
-                {
-                    provider = Aes.Create();
-                    created = true;
-                }
-                provider.SetValidKey(key);
-                provider.SetValidIV(key);
-                provider.Padding = PaddingMode.None;
+                aesAlg.GenerateKey();
+                aesAlg.Key = Encoding.ASCII.GetBytes(key.Resize(aesAlg.Key.Length, ' ')); ;
 
+                aesAlg.GenerateIV();
+                IV = aesAlg.IV;
 
-                using (var memoryStream = new MemoryStream())
+                aesAlg.Mode = CipherMode.CBC;
+
+                var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption. 
+                using (var msEncrypt = new MemoryStream())
                 {
-                    var content = Encoding.ASCII.GetBytes(text);
-                    var cryptoStream = new CryptoStream(memoryStream, provider.CreateEncryptor(), CryptoStreamMode.Write);
-                    cryptoStream.Write(content, 0, content.Length);
-                    cryptoStream.FlushFinalBlock();
-                    target = Convert.ToBase64String(memoryStream.ToArray());
+                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (var swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(text);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
                 }
             }
-            finally
-            {
-                if (created)
-                {
-                    provider.Dispose();
-                }
-            }
-            return target;
+
+            var combinedIvCt = new byte[IV.Length + encrypted.Length];
+            Array.Copy(IV, 0, combinedIvCt, 0, IV.Length);
+            Array.Copy(encrypted, 0, combinedIvCt, IV.Length, encrypted.Length);
+
+            return Convert.ToBase64String(combinedIvCt);
         }
 
         private static string Decrypt(string text, string key, SymmetricAlgorithm provider)
         {
-            string target = null;
-            var created = false;
-            try
+            var cipherTextCombined = Convert.FromBase64String(text);
+
+            // Declare the string used to hold 
+            // the decrypted text. 
+            string plaintext = null;
+
+            // Create an Aes object 
+            // with the specified key and IV. 
+            using (Aes aesAlg = Aes.Create())
             {
-                if (provider == null)
-                {
-                    provider = Aes.Create();
-                    created = true;
-                }
-                provider.SetValidKey(key);
-                provider.SetValidIV(key);
-                provider.Padding = PaddingMode.None;
+                aesAlg.GenerateKey();
+                aesAlg.Key = Encoding.ASCII.GetBytes(key.Resize(aesAlg.Key.Length, ' '));
 
-                var content = Convert.FromBase64String(text);
+                byte[] IV = new byte[aesAlg.BlockSize / 8];
+                byte[] cipherText = new byte[cipherTextCombined.Length - IV.Length];
 
-                using (var memoryStream = new MemoryStream(content, 0, content.Length))
+                Array.Copy(cipherTextCombined, IV, IV.Length);
+                Array.Copy(cipherTextCombined, IV.Length, cipherText, 0, cipherText.Length);
+
+                aesAlg.IV = IV;
+
+                aesAlg.Mode = CipherMode.CBC;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption. 
+                using (var msDecrypt = new MemoryStream(cipherText))
                 {
-                    var cryptoStream = new CryptoStream(memoryStream, provider.CreateDecryptor(), CryptoStreamMode.Read);
-                    using (var reader = new StreamReader(cryptoStream))
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        target = reader.ReadToEnd();
+                        using (var srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+                            // Read the decrypted bytes from the decrypting stream
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
                     }
                 }
+
             }
-            catch (Exception exception)
-            {
-                throw new InvalidOperationException("Unable to decrypt the string.", exception);
-            }
-            finally
-            {
-                if (created)
-                {
-                    provider.Dispose();
-                }
-            }
-            return target;
+
+            return plaintext;
         }
 
         private static byte[] Decrypt(byte[] text, string key, SymmetricAlgorithm provider)
         {
-            var created = false;
-            try
-            {
-                if (provider == null)
-                {
-                    provider = Aes.Create();
-                    created = true;
-                }
-                provider.SetValidKey(key);
-                provider.SetValidIV(key);
-                provider.Padding = PaddingMode.None;
+            var cipherTextCombined = text;
 
-                using (var memoryStream = new MemoryStream())
+            // Declare the string used to hold 
+            // the decrypted text. 
+            string plaintext = null;
+
+            // Create an Aes object 
+            // with the specified key and IV. 
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.GenerateKey();
+                aesAlg.Key = Encoding.ASCII.GetBytes(key.Resize(aesAlg.Key.Length, ' '));
+
+                byte[] IV = new byte[aesAlg.BlockSize / 8];
+                byte[] cipherText = new byte[cipherTextCombined.Length - IV.Length];
+
+                Array.Copy(cipherTextCombined, IV, IV.Length);
+                Array.Copy(cipherTextCombined, IV.Length, cipherText, 0, cipherText.Length);
+
+                aesAlg.IV = IV;
+
+                aesAlg.Mode = CipherMode.CBC;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption. 
+                using (var msDecrypt = new MemoryStream(cipherText))
                 {
-                    using (var cryptoStream = new CryptoStream(memoryStream, provider.CreateDecryptor(), CryptoStreamMode.Write))
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        cryptoStream.Write(text, 0, text.Length);
-                        cryptoStream.FlushFinalBlock();
-                        return memoryStream.ToArray();
+                        using (var srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+                            // Read the decrypted bytes from the decrypting stream
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
                     }
                 }
+
             }
-            catch (Exception exception)
-            {
-                throw new InvalidOperationException("Unable to decrypt the bytes.", exception);
-            }
-            finally
-            {
-                if (created)
-                {
-                    provider.Dispose();
-                }
-            }
+
+            return Encoding.UTF8.GetBytes(plaintext);
         }
 
         #endregion

@@ -6,8 +6,8 @@
  */
 
 using System.Security.Claims;
-using Newtonsoft.Json;
 using Kuno.Serialization;
+using Newtonsoft.Json;
 
 namespace Kuno.Services.Messaging
 {
@@ -39,6 +39,14 @@ namespace Kuno.Services.Messaging
         /// </summary>
         /// <value>The requested path.</value>
         public string Path { get; internal set; }
+
+        /// <summary>
+        /// Gets the requested channel.
+        /// </summary>
+        /// <value>
+        /// The requested channel.
+        /// </value>
+        public string Channel { get; internal set; }
 
         /// <summary>
         /// Gets the user's session identifier.

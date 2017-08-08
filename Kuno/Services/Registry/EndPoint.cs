@@ -7,10 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Kuno.Reflection;
 using Kuno.Text;
 
@@ -59,6 +55,12 @@ namespace Kuno.Services.Registry
         /// <value>The path.</value>
         public string Path { get; set; }
 
+        /// <summary>
+        /// Gets the versioned path. ie v1/some-endpoint.
+        /// </summary>
+        /// <value>
+        /// The versioned path.
+        /// </value>
         public string VersionedPath => $"v{this.Version}/{this.Path}";
 
         /// <summary>
@@ -66,6 +68,14 @@ namespace Kuno.Services.Registry
         /// </summary>
         /// <value>Indicates whether the endpoint is secure.</value>
         public bool Secure { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="EndPoint"/> is public.  If it is not public it will not show in API specifications.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if public; otherwise, <c>false</c>.
+        /// </value>
+        public bool Public { get; set; }
 
         /// <summary>
         /// Gets or sets the endpoint tags.
@@ -107,7 +117,8 @@ namespace Kuno.Services.Registry
                     HttpMethod = "POST",
                     Version = version,
                     Timeout = timeout,
-                    Function = function
+                    Function = function,
+                    Public = false
                 };
 
                 var attributes = function.FunctionType.GetAllAttributes<EndPointAttribute>();
@@ -122,7 +133,8 @@ namespace Kuno.Services.Registry
                         Version = version,
                         Timeout = timeout,
                         Secure = attribute.Secure,
-                        Function = function
+                        Function = function,
+                        Public = attribute.Public
                     };
                 }
             }

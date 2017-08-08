@@ -9,10 +9,18 @@ using ExecutionContext = Kuno.Services.Messaging.ExecutionContext;
 
 namespace Kuno.Tests
 {
+    /// <summary>
+    /// The test dispatcher allows tests to intercept calls to the messaging system.
+    /// </summary>
     public class TestDispatcher : RequestRouter, IRemoteRouter
     {
-        private Dictionary<string, Func<object, Request, object>> _endPoints = new Dictionary<string, Func<object, Request, object>>();
+        private readonly Dictionary<string, Func<object, Request, object>> _endPoints = new Dictionary<string, Func<object, Request, object>>();
 
+        /// <summary>
+        /// Uses the specified action when the endpoint is called.
+        /// </summary>
+        /// <typeparam name="T">The endpoint request type.</typeparam>
+        /// <param name="action">The action to run.</param>
         public void UseEndPoint<T>(Action<T, Request> action)
         {
             _endPoints.Add(typeof(T).FullName, (a, b) =>

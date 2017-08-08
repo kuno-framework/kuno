@@ -32,7 +32,7 @@ namespace Kuno.Services.Services
         public override OpenApiDocument Receive(GetOpenApiRequest instance)
         {
             var document = new OpenApiDocument();
-            document.Load(_services, instance.All);
+            document.Load(_services, instance.All, instance.Versions);
             document.Host = instance.Host;
 
             if (!String.IsNullOrWhiteSpace(instance.BasePath))

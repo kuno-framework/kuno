@@ -45,7 +45,7 @@ namespace Kuno.Services.Messaging
         /// Publishes the specified event.
         /// </summary>
         /// <param name="instance">The event instance.</param>
-        void Publish(Event instance);
+        Task Publish(Event instance);
 
         /// <summary>
         /// Sends the specified command to the configured point-to-point endpoint.

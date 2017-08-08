@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Kuno.Services.Registry;
-using Kuno.Services.Logging;
 using Kuno.Validation;
 
 namespace Kuno.Services.Messaging
@@ -62,6 +61,12 @@ namespace Kuno.Services.Messaging
         /// <value>The date and time that execution completed.</value>
         public DateTimeOffset? Completed { get; private set; }
 
+        /// <summary>
+        /// Gets the function.
+        /// </summary>
+        /// <value>
+        /// The function.
+        /// </value>
         public FunctionInfo Function { get; private set; }
 
         /// <summary>

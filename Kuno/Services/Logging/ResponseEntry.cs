@@ -51,6 +51,7 @@ namespace Kuno.Services.Logging
             this.ApplicationName = environment.Title;
             this.Path = context.Request.Path;
             this.Version = environment.Version;
+            this.Channel = context.Request.Channel;
             this.Build = Assembly.GetEntryAssembly()?.GetName()?.Version.ToString();
             if (this.Completed.HasValue)
             {
@@ -58,6 +59,14 @@ namespace Kuno.Services.Logging
             }
             this.EnvironmentName = environment.Environment;
         }
+
+        /// <summary>
+        /// Gets or sets the channel.
+        /// </summary>
+        /// <value>
+        /// The channel.
+        /// </value>
+        public string Channel { get; set; }
 
         /// <summary>
         /// Gets or sets application name where the endpoint executed.

@@ -49,6 +49,9 @@ namespace Kuno
 
             builder.RegisterModule(new ConfigurationModule(this));
 
+            _tasks = new TaskRunner();
+            builder.RegisterInstance(_tasks);
+
             foreach (var module in this.Assemblies.SafelyGetTypes<Module>().Where(e => e.GetAllAttributes<AutoLoadAttribute>().Any()))
             {
                 if (module.GetConstructors().SingleOrDefault()?.GetParameters().Length == 0)
@@ -187,7 +190,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public Task Publish(string channel, object message = null)
         {
-            return this.Container.Resolve<IMessageGateway>().Publish(channel, message);
+            return _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Publish(channel, message));
         }
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace Kuno
         /// <param name="instance">The event instance.</param>
         public void Publish(Event instance)
         {
-            this.Container.Resolve<IMessageGateway>().Publish(instance);
+            _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Publish(instance));
         }
 
         /// <summary>
@@ -207,7 +210,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public Task<MessageResult> Send(object message, TimeSpan? timeout = null)
         {
-            return this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout);
+            return _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout));
         }
 
         /// <summary>
@@ -218,7 +221,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public async Task<MessageResult<T>> Send<T>(string path, TimeSpan? timeout = null)
         {
-            var result = await this.Container.Resolve<IMessageGateway>().Send(path, timeout: timeout).ConfigureAwait(false);
+            var result = await _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(path, timeout: timeout)).ConfigureAwait(false);
 
             return new MessageResult<T>(result);
         }
@@ -231,7 +234,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public async Task<MessageResult<T>> Send<T>(object message, TimeSpan? timeout = null)
         {
-            var result = await this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout).ConfigureAwait(false);
+            var result = await _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(message, timeout: timeout)).ConfigureAwait(false);
 
             return new MessageResult<T>(result);
         }
@@ -245,7 +248,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public Task<MessageResult> Send(string path, object message, TimeSpan? timeout = null)
         {
-            return this.Container.Resolve<IMessageGateway>().Send(path, message, timeout: timeout);
+            return _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(path, message, timeout: timeout));
         }
 
         /// <summary>
@@ -256,7 +259,7 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public Task<MessageResult> Send(string path, TimeSpan? timeout = null)
         {
-            return this.Container.Resolve<IMessageGateway>().Send(path, null, timeout);
+            return _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(path, null, timeout));
         }
 
         /// <summary>
@@ -268,12 +271,13 @@ namespace Kuno
         /// <returns>A task for asynchronous programming.</returns>
         public Task<MessageResult> Send(string path, string command, TimeSpan? timeout = null)
         {
-            return this.Container.Resolve<IMessageGateway>().Send(path, command, timeout: timeout);
+            return _tasks.Add(() => this.Container.Resolve<IMessageGateway>().Send(path, command, timeout: timeout));
         }
 
         #region IDisposable Implementation
 
         private bool _disposed;
+        private TaskRunner _tasks;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -317,5 +321,11 @@ namespace Kuno
         }
 
         #endregion
+
+        public Task Shutdown()
+        {
+            this.Logger.Information("Kuno system is shutting down.");
+            return _tasks.Shutdown();
+        }
     }
 }

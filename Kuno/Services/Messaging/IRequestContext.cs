@@ -21,16 +21,25 @@ namespace Kuno.Services.Messaging
         /// <param name="endPoint">The endpoint.</param>
         /// <param name="parent">The parent.</param>
         /// <returns>The current request.</returns>
-        Request Resolve(object message, FunctionInfo endPoint, Request parent = null);
+        Request Resolve(object message, EndPoint endPoint, Request parent = null);
 
         /// <summary>
         /// Resolves the current request.
         /// </summary>
-        /// <param name="path">The path.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="subscription">The endpoint.</param>
+        /// <param name="parent">The parent.</param>
+        /// <returns>The current request.</returns>
+        Request Resolve(object message, Subscription subscription, Request parent = null);
+
+        /// <summary>
+        /// Resolves the current request.
+        /// </summary>
+        /// <param name="message">The message.</param>
         /// <param name="endPoint">The endpoint.</param>
         /// <param name="parent">The parent.</param>
         /// <returns>The current request.</returns>
-        Request Resolve(string path, FunctionInfo endPoint, Request parent = null);
+        Request Resolve(string message, EndPoint endPoint, Request parent = null);
 
         /// <summary>
         /// Resolves the current request.
