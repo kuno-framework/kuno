@@ -41,7 +41,7 @@ namespace Kuno.Services.Logging
             this.CorrelationId = context.Request.CorrelationId;
             this.RequestId = context.Request.Message.Id;
             this.Completed = context.Completed;
-            this.EndPoint = context.Function.FunctionType.AssemblyQualifiedName;
+            this.Function = context.Function.FunctionType.AssemblyQualifiedName;
             this.Exception = context.Exception?.ToString();
             this.IsSuccessful = context.IsSuccessful;
             this.Started = context.Started;
@@ -101,10 +101,10 @@ namespace Kuno.Services.Logging
         public TimeSpan Elapsed { get; set; }
 
         /// <summary>
-        /// Gets the type of the endpoint.
+        /// Gets the type of the function.
         /// </summary>
-        /// <value>The type of the endpoint.</value>
-        public string EndPoint { get; set; }
+        /// <value>The type of the function.</value>
+        public string Function { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the environment.

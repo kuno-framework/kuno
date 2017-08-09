@@ -15,7 +15,7 @@ function Clear-LocalCache() {
         if (Test-Path $path) {
 
             Push-Location $path
-
+             
             foreach($package in $Packages) {
 
                 foreach($item in Get-ChildItem -Filter "$package" -Recurse) {

@@ -66,9 +66,11 @@ namespace ConsoleClient
         {
             using (var stack = new KunoStack())
             {
-                stack.Send("abc").Wait();
+                stack.Send(new SomeEvent());
 
                 stack.Shutdown().Wait();
+
+                stack.GetRequests().OutputToJson();
             }
 
         }

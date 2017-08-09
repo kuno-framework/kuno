@@ -29,7 +29,7 @@ namespace Kuno.Services
         /// Gets the current context.
         /// </summary>
         /// <value>The current context.</value>
-        protected internal ExecutionContext Context => ((IFunction) this).Context;
+        internal ExecutionContext Context => ((IFunction) this).Context;
 
         /// <summary>
         /// Gets the configured <see cref="IComponentContext" /> instance.

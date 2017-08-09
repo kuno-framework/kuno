@@ -103,6 +103,7 @@ namespace Kuno.Services.Messaging
             foreach (var subscription in subscriptions)
             {
                 var request = _requestContext.Value.Resolve(current, subscription);
+                await this.LogRequest(request).ConfigureAwait(false);
                 await _router.Value.Route(request, subscription.Function, null).ConfigureAwait(false);
             }
 
@@ -120,6 +121,7 @@ namespace Kuno.Services.Messaging
             foreach (var endPoint in _services.Value.Subscriptions.Find(current))
             {
                 var request = _requestContext.Value.Resolve(current, endPoint);
+                await this.LogRequest(request).ConfigureAwait(false);
 
                 await _router.Value.Route(request, endPoint.Function, null);
             }
@@ -198,7 +200,7 @@ namespace Kuno.Services.Messaging
 
         private async Task LogRequest(Request request)
         {
-            if (request.Path?.StartsWith("_") == false)
+            if (request.Path?.StartsWith("_") != true)
             {
                 await _requests.Value.Append(request).ConfigureAwait(false);
             }

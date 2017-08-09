@@ -36,6 +36,7 @@ function Go ($Path) {
 
     Remove-Item .\Bin -Force -Recurse
     Clear-LocalCache
+    dotnet restore
     dotnet build
     dotnet pack --no-build --configuration $Configuration
     copy .\bin\$Configuration\*.nupkg c:\nuget\
